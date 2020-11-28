@@ -1,8 +1,7 @@
 # RozvrhBOT
 Discord bot ktorý posiela linky na online hodiny
 
-#### Konfiguračné súbory
-## Premenné
+## Konfiguračné súbory
 ### config.txt
 - `DISCORD_BOT_TOKEN`: Botov token ktorým sa bude prihlasovať
 - `BOT_PREFIX`: Prefix pred príkazy bota, ak nebude žiadný, bot bude reagovať na všetky správy začinajúce na príkazy
