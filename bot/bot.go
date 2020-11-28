@@ -83,7 +83,7 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 			log.Println("Running HodAnnounce function in a separate proccess")
 			go HodAnnounce(s)
 		} else {
-			log.Println("Not runnning HodAnnounce function in a separate proccess")
+			log.Println("Not runnning HodAnnounce function")
 		}
 	} else {
 		log.Println("Not runnning HodAnnounce function")
@@ -91,6 +91,9 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if s.State.User.ID == m.Author.ID{
+		return
+	}
 	channel, err := s.Channel(m.ChannelID)
 	if err != nil {
 		log.Println("toto je v piči: ", err)
@@ -166,19 +169,6 @@ func GetCommandType(arg string) CommandType {
 		}
 	}
 	return Null
-}
-
-func sendMessageDM(s *discordgo.Session, userID string, message *discordgo.MessageEmbed) *discordgo.Message {
-	dmChannel, err := s.UserChannelCreate(userID)
-	if err != nil {
-		log.Println("toto je v piči: ", err)
-	}
-	m, err := s.ChannelMessageSendEmbed(dmChannel.ID, message)
-	if err != nil {
-		log.Println("toto je v piči: ", err)
-	}
-	log.Println("Sending message to user ", userID)
-	return m
 }
 
 func NewRozvrh(ChannelID,MessageID,GuildID string, day time.Weekday) *RozvrhEmbed {

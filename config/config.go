@@ -72,14 +72,14 @@ func ReadConfig() error {
 
 	BotPrefix = os.Getenv("BOT_PREFIX")
 	config.BotPrefix = BotPrefix
-	if config.BotPrefix == "" {
+	/*if config.BotPrefix == "" {
 		return errors.New("no BOT_PREFIX provided")
-	}
+	}*/
 
 	IDs = strings.Split(os.Getenv("IDS")," ")
 	config.IDs = IDs
 	if config.BotPrefix == "" {
-		fmt.Println("No IDS; everyone will be able to use bot")
+		fmt.Println("No IDS; everyone will be able to use the bot")
 	}
 
 	Casy = strings.Split(os.Getenv("CASY")," ")
@@ -113,7 +113,6 @@ func ReadConfig() error {
 	}
 
 	var JedinecneHodiny []string
-	//var LinkKuHodine map[string]string
 	LinkKuHodine, err = godotenv.Read("hodiny.txt")
 	config.LinkKuHodine = LinkKuHodine
 	if err != nil {
@@ -165,9 +164,6 @@ func SplitCasy(casy []string)([]int, []int){
 		//Minuty 50
 		Minuty = append(Minuty,Min)
 	}
-
-	/*fmt.Println(Hodiny)
-	fmt.Println(Minuty)*/
 	return Hodiny,Minuty
 }
 
@@ -187,14 +183,3 @@ func AppendIfMissing(slice []string, i string) []string {
 	}
 */
 
-/*
-	logEntry := os.Getenv("DISABLE_LOG_FILE")
-	if logEntry == "" {
-		file, err := os.Create(path.Join(logPath, "logs.txt"))
-		if err != nil {
-			return err
-		}
-		mw := io.MultiWriter(os.Stdout, file)
-		log.SetOutput(mw)
-	}
-*/
