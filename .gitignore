@@ -1,0 +1,11 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.manifest
+*.ico
+*.png
+*.syso
+*.bat
+*.txt
+
+.idea/
