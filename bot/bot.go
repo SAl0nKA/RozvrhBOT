@@ -387,18 +387,28 @@ func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 			Rozvrh = rozvrh
 		}
 	}
+	if Rozvrh == nil {
+		return
+	}
 	if Rozvrh.MessageID == r.MessageID && Rozvrh.ChannelID == r.ChannelID && (ContainsIDs(member.Roles, config.IDs) || config.IDs == nil){
+		channel, err := s.Channel(r.ChannelID)
+		if err != nil {
+			log.Println("toto je v piči: ", err)
+		}
 		switch r.Emoji.Name {
 		case "◀️":
+			log.Printf("User %s reacted with \"Previous day\" to rozvrh in channel %s", member.Nick, channel.Name)
 			s.MessageReactionRemove(r.ChannelID,r.MessageID, "◀️",r.UserID)
 			embed := ReturnRozvrh(-1,r.MessageID)
 			s.ChannelMessageEditEmbed(r.ChannelID,r.MessageID,&embed)
 		case "▶️":
+			log.Printf("User %s reacted with \"Next day\" to rozvrh in channel %s", member.Nick, channel.Name)
 			s.MessageReactionRemove(r.ChannelID,r.MessageID, "▶️",r.UserID)
 			embed := ReturnRozvrh(1,r.MessageID)
 			s.ChannelMessageEditEmbed(r.ChannelID,r.MessageID,&embed)
 		case "🔄":
 			//s.MessageReactionRemove(RozvrhChannelID,RozvrhMessageID, "🔄",r.UserID)
+			log.Printf("User %s reacted with \"Refresh\" to rozvrh in channel %s", member.Nick, channel.Name)
 			s.ChannelMessageDelete(r.ChannelID,r.MessageID)
 			embed := ReturnRozvrh(0,"")
 			m, _ := s.ChannelMessageSendEmbed(r.ChannelID,&embed)
@@ -407,6 +417,7 @@ func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 			RozvrhEmbedy = append(RozvrhEmbedy,rozvrh)
 		case "❌":
 			//s.MessageReactionRemove(r.ChannelID,r.MessageID, "❌",r.UserID)
+			log.Printf("User %s reacted with \"Delete\" to rozvrh in channel %s", member.Nick, channel.Name)
 			s.ChannelMessageDelete(r.ChannelID,r.MessageID)
 		}
 	} else {
