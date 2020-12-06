@@ -77,7 +77,7 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 		URL:   "",
 		Type:  "",
 		Title: "Rozvrh",
-		Description: "Dnes nie sú žiadne hodiny, jeb na to",
+		Description: "Dnes nie sú žiadne hodiny",
 		Timestamp: "",
 		Color: 16711680, //RED
 		Image:    nil,
@@ -126,7 +126,7 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 var JeKoniec = discordgo.MessageEmbed{
 	URL:   "",
 	Type:  "",
-	Title: "Už je koniec, palte dopiče",
+	Title: "Je koniec. Ste voľní!",
 	Description: "Beep Boop. Táto správa je automatizovaná",
 	Timestamp: "",
 	Color:     16711680, //RED

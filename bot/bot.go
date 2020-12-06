@@ -80,13 +80,13 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 	if config.DefaultChannelID != nil {
 		log.Println("Checking for current day")
 		if t <= 5 && t != 0 {
-			log.Println("Running HodAnnounce function in a separate proccess")
+			log.Println("Running automatic lesson announcing")
 			go HodAnnounce(s)
 		} else {
-			log.Println("Not runnning HodAnnounce function")
+			log.Println("Not running automatic lesson announcing")
 		}
 	} else {
-		log.Println("Not runnning HodAnnounce function")
+		log.Println("Not running automatic lesson announcing")
 	}
 }
 
@@ -96,7 +96,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	channel, err := s.Channel(m.ChannelID)
 	if err != nil {
-		log.Println("toto je v piči: ", err)
+		log.Println("Couldn't get the channel name: ", err)
 	}
 	log.Printf("User %s wrote \"%s\" in channel %s", m.Author, m.Content, channel.Name)
 }
@@ -124,7 +124,6 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 					return
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "Najbližšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
-					s.ChannelMessageSend(m.ChannelID, "Ďakujeme že využívate nás a nie nejakého relasBOTa")
 				}
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Na tento príkaz nemáš opravnenie")
@@ -137,7 +136,6 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, "Už nie je žiadna hodina")
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "Ďalšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
-					s.ChannelMessageSend(m.ChannelID, "Ďakujeme že využívate nás a nie nejakého relasBOTa")
 				}
 			} else {
 				s.ChannelMessageSend(m.ChannelID, "Na tento príkaz nemáš opravnenie")
@@ -365,7 +363,7 @@ func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if Rozvrh.MessageID == r.MessageID && Rozvrh.ChannelID == r.ChannelID && (ContainsIDs(member.Roles, config.IDs) || config.IDs == nil){
 		channel, err := s.Channel(r.ChannelID)
 		if err != nil {
-			log.Println("toto je v piči: ", err)
+			log.Println("Couldn't get the channel name: ", err)
 		}
 		switch r.Emoji.Name {
 		case "◀️":

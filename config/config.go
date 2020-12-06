@@ -83,9 +83,6 @@ func ReadConfig() error {
 
 	BotPrefix = os.Getenv("BOT_PREFIX")
 	config.BotPrefix = BotPrefix
-	/*if config.BotPrefix == "" {
-		return errors.New("no BOT_PREFIX provided")
-	}*/
 
 	IDstring = os.Getenv("IDS")
 	config.IDstring = IDstring
