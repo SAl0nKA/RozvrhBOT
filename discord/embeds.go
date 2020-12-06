@@ -79,7 +79,7 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 		Title: "Rozvrh",
 		Description: "Dnes nie sú žiadne hodiny, jeb na to",
 		Timestamp: "",
-		Color:     16711680, //RED
+		Color: 16711680, //RED
 		Image:    nil,
 		Thumbnail: nil,
 		Video:     nil,
@@ -90,8 +90,19 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 	if day == 0{
 		day = time.Now().Weekday()
 	}
-
 	if day <= 5 && day != 0 {
+		fields := []*discordgo.MessageEmbedField{}
+		for i := 0;i<len(rozvrh);i++{
+			if rozvrh[i] == ""{
+				continue
+			}
+			f := discordgo.MessageEmbedField{
+				Name:   rozvrh[i] + " - " + casy[i],
+				Value:  linky[i],
+				Inline: false,
+			}
+			fields = append(fields,&f)
+		}
 		var EmbedRozvrh = discordgo.MessageEmbed{
 			URL:   "",
 			Type:  "",
@@ -104,43 +115,7 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 			Video:     nil,
 			Provider:  nil,
 			Author:    nil,
-			Fields: []*discordgo.MessageEmbedField{
-				{
-					Name: rozvrh[0] + " - "+ casy[0],
-					Value:  linky[0],
-					Inline: false,
-				},
-				{
-					Name: rozvrh[1] + " - "+ casy[1],
-					Value:  linky[1],
-					Inline: false,
-				},
-				{
-					Name: rozvrh[2] + " - "+ casy[2],
-					Value:  linky[2],
-					Inline: false,
-				},
-				{
-					Name: rozvrh[3] + " - "+ casy[3],
-					Value:  linky[3],
-					Inline: false,
-				},
-				{
-					Name: rozvrh[4] + " - "+ casy[4],
-					Value:  linky[4],
-					Inline: false,
-				},
-				{
-					Name: rozvrh[5] + " - "+ casy[5],
-					Value:  linky[5],
-					Inline: false,
-				},
-				{
-					Name: rozvrh[6] + " - "+ casy[6],
-					Value:  linky[6],
-					Inline: false,
-				},
-			},
+			Fields: fields,
 		}
 		return EmbedRozvrh
 	} else {

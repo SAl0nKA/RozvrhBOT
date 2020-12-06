@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Version 3.0.5")
+	fmt.Println("Version 3.0.7")
 	err := config.ReadConfig()
 	if err != nil {
 		log.Println(err.Error())

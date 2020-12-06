@@ -11,15 +11,20 @@ Discord bot ktorý posiela linky na online hodiny. Tento bot vznikol vo voľnom 
 - Následne použite vygenerovaný link a pozvite bota na svoj server. Na pridanie bota musíte mať práva na spravovanie serveru.
 
 ## Konfiguračné súbory
-#### Konfiguračné súbory sa vytvoria samé ak chýbaju.
+#### Konfiguračné súbory sa vytvoria samé ak chýbaju!!
 ### config.txt
+**Viacero argumentov oddelujte čiarkou**
+
+**Ak nejakú hodinu nemáte, miesto nej dajte `-`**
+
+*Príklad:* `PONDELOK=FYZ,-,FYZ` atď.
 - `DISCORD_BOT_TOKEN`: Botov token ktorým sa bude prihlasovať
 - `BOT_PREFIX`: Prefix pred príkazy bota, ak nebude žiadny, bot bude reagovať na všetky správy začínajúce na príkazy
-- `PONDELOK` - `PIATOK`: Hodiny, ktoré máte v ten deň. Zadávajte skratky, ktoré máte v rozvrhu, oddeľujte ich medzerou
+- `PONDELOK` - `PIATOK`: Hodiny, ktoré máte v ten deň. Zadávajte skratky, ktoré máte v rozvrhu **Môžete nastaviť maximalne 8 hodín na jeden deň**
 - `IDS` - ID rolí, ktoré budú môcť používať príkazy, nechajte prázdne aby ich mohli používať všetci
-- `CASY` - Časy odkedy dokedy sú hodiny, zadávajte ich vo formáte `8:00-8:45`, oddeľujte ich medzerou
+- `CASY` - Časy odkedy dokedy sú hodiny, zadávajte ich vo formáte `8:00-8:45`
 - `DEFAULT_CHANNEL` - ID kanálu do ktorého sa automaticky budú posielať najbližšie hodiny, ak to necháte prázdne, automatické oznamovanie nebude fungovať, môžete použiť viacero ID
-### hodiny.txt
+### linky.txt
 Po vyplnení `config.txt` sa vám vytvorí ďalší súbor s jednotlivými hodinami ktoré máte. Linky na hodiny zadávajte vo formáte `FYZ=link`
 
 ## Príkazy

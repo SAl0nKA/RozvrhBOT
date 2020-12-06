@@ -117,7 +117,7 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "Ping!")
 		case Hod:
 			log.Printf("Reacting to command \"%shod\"", config.BotPrefix)
-			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDs == nil{
+			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDstring == ""{
 				hod, link, cas := Hodiny(0)
 				if hod == "" {
 					s.ChannelMessageSend(m.ChannelID, link)
@@ -132,8 +132,8 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		case Dalsia:
 			log.Printf("Reacting to command \"%sdalsia\"", config.BotPrefix)
 			hod, link, cas := Hodiny(1)
-			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDs == nil{
-				if hod == "" {
+			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDstring == ""{
+				if cas == "" {
 					s.ChannelMessageSend(m.ChannelID, "Už nie je žiadna hodina")
 				} else {
 					s.ChannelMessageSend(m.ChannelID, "Ďalšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
@@ -144,9 +144,10 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		case Rozvrh:
 			log.Printf("Reacting to command \"%srozvrh\"", config.BotPrefix)
-			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDs == nil{
+			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDstring == ""{
 				embed := ReturnRozvrh(0,"")
 				mes,_ := s.ChannelMessageSendEmbed(m.ChannelID, &embed)
+				//time.Sleep(time.Second*3)
 				AddReactions(s,mes.ChannelID, mes.ID)
 				rozvrh := NewRozvrh(mes.ChannelID, mes.ID, mes.GuildID,time.Now().Weekday())
 				RozvrhEmbedy = append(RozvrhEmbedy,rozvrh)
@@ -171,63 +172,40 @@ func GetCommandType(arg string) CommandType {
 	return Null
 }
 
-func NewRozvrh(ChannelID,MessageID,GuildID string, day time.Weekday) *RozvrhEmbed {
+func NewRozvrh(ChannelID,MessageID,GuildID string, EditDay time.Weekday) *RozvrhEmbed {
 	r := RozvrhEmbed{
 		ChannelID:      ChannelID,
 		MessageID:      MessageID,
 		GuildID:		GuildID,
-		EditDay: 		 day,
+		EditDay: 		EditDay,
 	}
 	return &r
 }
 
-func GetAvatar(mention string, s *discordgo.Session, m *discordgo.MessageCreate) string {
-	log.Println("Checking for user's avatar")
-	mentionID := strings.ReplaceAll(strings.ReplaceAll(mention, "<@!", ""), ">", "")
-	mentionedmember, err := s.GuildMember(m.GuildID, mentionID)
-	if err != nil {
-		log.Println("toto je v piči: ", err)
-	}
-	url := mentionedmember.User.AvatarURL("256")
-	return url
-}
-
-func GetDay(day time.Weekday) []string {
+func GetSChoolday(day time.Weekday) *config.SchoolDay {
 	if day == 0 {
 		day = time.Now().Weekday()
 	}
 	switch day {
 	case 1:
-		hodiny := config.Dni[0]
-		return hodiny
+		sd := config.SchoolDays[1]
+		return sd
 	case 2:
-		hodiny := config.Dni[1]
-		return hodiny
+		sd := config.SchoolDays[2]
+		return sd
 	case 3:
-		hodiny := config.Dni[2]
-		return hodiny
+		sd := config.SchoolDays[3]
+		return sd
 	case 4:
-		hodiny := config.Dni[3]
-		return hodiny
+		sd := config.SchoolDays[4]
+		return sd
 	case 5:
-		hodiny := config.Dni[4]
-		return hodiny
+		sd := config.SchoolDays[5]
+		return sd
 	default:
-		x := []string{}
-		return x
+		sd := config.SchoolDays[0]
+		return sd
 	}
-}
-
-func GetLesson(lesson string) (string, string) {
-	hodina, linknahodinu := "", ""
-	for hod, link := range config.LinkKuHodine {
-		if hod == lesson {
-			hodina = hod
-			linknahodinu = link
-			break
-		}
-	}
-	return hodina, linknahodinu
 }
 
 func Hodiny(dalsia int) (string, string, string) {
@@ -238,41 +216,47 @@ func Hodiny(dalsia int) (string, string, string) {
 	m := t.Minute()
 	if t.Weekday() > 0 && t.Weekday() < 6{
 		switch {
-		//h <= 8 && m < 35
 		case h <= hodiny[1] ||(h==hodiny[1] && m < minuty[1]):
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[0+dalsia])
-			cas := config.Casy[0+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[0+dalsia]
+			cas := sd.Casy[0+dalsia]
+			link :=  sd.Linky[0+dalsia]
 			return hod, link, cas
 		case (h == hodiny[2] && m >= minuty[1]) || (h == hodiny[3] && m < minuty[3]):
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[1+dalsia])
-			cas := config.Casy[1+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[1+dalsia]
+			cas := sd.Casy[1+dalsia]
+			link :=  sd.Linky[1+dalsia]
 			return hod, link, cas
 		case (h == hodiny[4] && m >= minuty[3]) || (h == hodiny[5] && m < minuty[5]):
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[2+dalsia])
-			cas := config.Casy[2+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[2+dalsia]
+			cas := sd.Casy[2+dalsia]
+			link :=  sd.Linky[2+dalsia]
 			return hod, link, cas
 		case (h == hodiny[6] && m >= minuty[5]) || (h == hodiny[7] && m < minuty[7]):
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[3+dalsia])
-			cas := config.Casy[3+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[3+dalsia]
+			cas := sd.Casy[3+dalsia]
+			link :=  sd.Linky[3+dalsia]
 			return hod, link, cas
 		case (h == hodiny[8] && m >= minuty[7]) || (h == hodiny[9] && m < minuty[9]):
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[4+dalsia])
-			cas := config.Casy[4+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[4+dalsia]
+			cas := sd.Casy[4+dalsia]
+			link :=  sd.Linky[4+dalsia]
 			return hod, link, cas
 		case (h == hodiny[10] && m >= minuty[9]) || (h == hodiny[11] && m < minuty[11]):
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[5+dalsia])
-			cas := config.Casy[5+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[5+dalsia]
+			cas := sd.Casy[5+dalsia]
+			link :=  sd.Linky[5+dalsia]
 			return hod, link, cas
 		case h == hodiny[12] && m >= minuty[11]:
-			lesson := GetDay(0)
-			hod, link := GetLesson(lesson[6+dalsia])
-			cas := config.Casy[6+dalsia]
+			sd := GetSChoolday(0)
+			hod := sd.Hodiny[6+dalsia]
+			cas := sd.Casy[6+dalsia]
+			link :=  sd.Linky[6+dalsia]
 			return hod, link, cas
 		default:
 			link := "Momentalne nie je žiadna hodina"
@@ -302,22 +286,9 @@ func ReturnRozvrh(day time.Weekday, MessageID string) discordgo.MessageEmbed {
 				}
 			}
 		}
-	} /*else {
-		Rozvrh.EditDay = 0
-	}*/
-
-	rozvrh := GetDay(Rozvrh.EditDay)
-	var linky []string
-	if rozvrh != nil {
-		for _, hodina := range rozvrh {
-			for hod, link := range config.LinkKuHodine {
-				if hod == hodina {
-					linky = append(linky, link)
-				}
-			}
-		}
 	}
-	return discord.ReturnEmbedRozvrh(rozvrh, config.Casy, linky,Rozvrh.EditDay)
+	sd := GetSChoolday(Rozvrh.EditDay)
+	return discord.ReturnEmbedRozvrh(sd.Hodiny, sd.Casy, sd.Linky,Rozvrh.EditDay)
 }
 
 func HodAnnounce(s *discordgo.Session) {
@@ -343,11 +314,11 @@ func HodAnnounce(s *discordgo.Session) {
 			HodAnnounceHelp(s, 5)
 		case h == hodiny[12] && m == (minuty[12]-5):
 			HodAnnounceHelp(s, 6)
+		case h == hodiny[14] && m == (minuty[14]-5):
+			HodAnnounceHelp(s, 7)
 		case h == hodiny[len(hodiny)-1] && m == (minuty[len(hodiny)-1]):
 			for _,channelID := range config.DefaultChannelID{
 				s.ChannelMessageSendEmbed(channelID, &discord.JeKoniec)
-				/*s.ChannelMessageSend(channelID, "Už je koniec, palte dopiče")
-				s.ChannelMessageSend(channelID, "*Beep Boop. Táto správa je automatizovaná*")*/
 			}
 		}
 		if h >= hodiny[len(hodiny)-1] {
@@ -358,9 +329,10 @@ func HodAnnounce(s *discordgo.Session) {
 }
 
 func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
-	lesson := GetDay(0)
-	hod, link := GetLesson(lesson[BaseHod])
-	cas := config.Casy[BaseHod]
+	sd := GetSChoolday(0)
+	hod := sd.Hodiny[BaseHod]
+	cas := sd.Casy[BaseHod]
+	link :=  sd.Linky[BaseHod]
 	if hod == "" {
 		for _,channelID := range config.DefaultChannelID{
 			s.ChannelMessageSend(channelID, link)
@@ -427,12 +399,14 @@ func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 
 func AddReactions(s *discordgo.Session, channelid, messageid string){
 	for _,emoji := range Emojis{
-		s.MessageReactionAdd(channelid,messageid,emoji)
+		err := s.MessageReactionAdd(channelid,messageid,emoji)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 
 func ContainsIDs(roles []string, ids []string) bool {
-	//ids := strings.Split(x,",")
 	if config.IDs == nil {
 		return true
 	}
