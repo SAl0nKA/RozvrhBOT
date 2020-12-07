@@ -316,13 +316,13 @@ func HodAnnounce(s *discordgo.Session) {
 			HodAnnounceHelp(s, 6)
 		case h == hodiny[14] && m == (minuty[14]-5):
 			HodAnnounceHelp(s, 7)
-		case h == hodiny[len(hodiny)-1] && m == (minuty[len(hodiny)-1]):
+		case h == hodiny[len(config.Casy)*2-1] && m == (len(config.Casy)*2-1):
 			for _,channelID := range config.DefaultChannelID{
 				s.ChannelMessageSendEmbed(channelID, &discord.JeKoniec)
 			}
 		}
-		if h >= hodiny[len(hodiny)-1] {
-			log.Printf("Turning off the HodAnnounce function")
+		if h >= hodiny[len(config.Casy)*2-1] {
+			log.Printf("Turning off the automatic lesson announcing")
 			break
 		}
 	}
