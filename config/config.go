@@ -207,20 +207,14 @@ func ReadConfig() error {
 
 func SplitCasy(casy []string)([]int, []int){
 	var CasySplit []string
-	var cas string
 	var Hodiny []int
 	var Minuty []int
 	//casy 7:50-8:35
-	for _,cas = range casy{
-		if cas == "- - - - - - -"{
-			CasySplit = append(CasySplit,"0")
-			CasySplit = append(CasySplit,"0")
-		} else {
-			//7:50
-			CasySplit = append(CasySplit,strings.Split(cas,"-")[0])
-			//8:35
-			CasySplit = append(CasySplit,strings.Split(cas,"-")[1])
-		}
+	for _,cas := range casy{
+		//7:50
+		CasySplit = append(CasySplit,strings.Split(cas,"-")[0])
+		//8:35
+		CasySplit = append(CasySplit,strings.Split(cas,"-")[1])
 	}
 	var Hod int
 	var	Min int
@@ -240,6 +234,10 @@ func SplitCasy(casy []string)([]int, []int){
 		Hodiny = append(Hodiny,Hod)
 		//Minuty 50
 		Minuty = append(Minuty,Min)
+	}
+	for i:=0;i<(15-len(Hodiny));i++{
+		Hodiny = append(Hodiny,0)
+		Minuty = append(Minuty,0)
 	}
 	return Hodiny,Minuty
 }
