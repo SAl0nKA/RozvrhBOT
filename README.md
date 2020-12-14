@@ -22,14 +22,14 @@ Discord bot ktorý posiela linky na online hodiny. Tento bot vznikol vo voľnom 
 - `BOT_PREFIX`: Prefix pred príkazy bota, ak nebude žiadny, bot bude reagovať na všetky správy začínajúce na príkazy
 - `PONDELOK` - `PIATOK`: Hodiny, ktoré máte v ten deň. Zadávajte skratky, ktoré máte v rozvrhu **Môžete nastaviť maximalne 8 hodín na jeden deň**
 - `IDS` - ID rolí, ktoré budú môcť používať príkazy, nechajte prázdne aby ich mohli používať všetci
-- `CASY` - Časy odkedy dokedy sú hodiny, zadávajte ich vo formáte `8:00-8:45`
+- `CASY` - Časy odkedy dokedy sú hodiny, zadávajte ich vo formáte `8:00-8:45`, zadávajte všetky hodiny od prvej po poslednú
 - `DEFAULT_CHANNEL` - ID kanálu do ktorého sa automaticky budú posielať najbližšie hodiny, ak to necháte prázdne, automatické oznamovanie nebude fungovať, môžete použiť viacero ID
 ### linky.txt
 Po vyplnení `config.txt` sa vám vytvorí ďalší súbor s jednotlivými hodinami ktoré máte. Linky na hodiny zadávajte vo formáte `FYZ=link`
 
 ## Príkazy
 - `help` vypíše použitelné príkazy
-- `ping` a `pong` - slúžia čisto na testovanie správnej funkcie bota
+- `ping` a `pong` - slúžia čisto na testovanie správnej funkcie bota, `pong` je prístupný podľa nastavenia `IDS` v `config.txt`
 - `hod` - Vypíše najbližšiu hodinu
 - `dalsia` - Vypíše následujúcu hodinu za najbližšou hodinou
-- `rozvrh` - Vypíše celý rozvrh na konkretný deň, v rozvrhu sa da posúvať medzi jednotlivými dňami
+- `rozvrh` - Vypíše celý rozvrh na konkretný deň, v rozvrhu sa da posúvať medzi jednotlivými dňami pomocou šípiek
