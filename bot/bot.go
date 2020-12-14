@@ -54,7 +54,7 @@ func Start() {
 
 	goBot.AddHandler(ready)
 	goBot.AddHandler(HandleCommand)
-	goBot.AddHandler(messageCreate)
+	//goBot.AddHandler(messageCreate)
 	goBot.AddHandler(HandleReaction)
 
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions)
@@ -90,6 +90,7 @@ func ready(s *discordgo.Session, event *discordgo.Ready) {
 	}
 }
 
+/*
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if s.State.User.ID == m.Author.ID{
 		return
@@ -99,7 +100,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		log.Println("Couldn't get the channel name: ", err)
 	}
 	log.Printf("User %s wrote \"%s\" in channel %s", m.Author, m.Content, channel.Name)
-}
+}*/
 
 func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.HasPrefix(m.Content, config.BotPrefix) {
@@ -114,7 +115,11 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "Pong!")
 		case Pong:
 			log.Printf("Reacting to command \"%spong\"", config.BotPrefix)
-			s.ChannelMessageSend(m.ChannelID, "Ping!")
+			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDstring == ""{
+				s.ChannelMessageSend(m.ChannelID, "Ping!")
+			} else {
+				NemasOpravnenie(s,m)
+			}
 		case Hod:
 			log.Printf("Reacting to command \"%shod\"", config.BotPrefix)
 			if ContainsIDs(m.Member.Roles, config.IDs) || config.IDstring == ""{
@@ -123,10 +128,15 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 					s.ChannelMessageSend(m.ChannelID, link)
 					return
 				} else {
-					s.ChannelMessageSend(m.ChannelID, "Najbližšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
+					embed := discordgo.MessageEmbed{
+						Title: fmt.Sprintf("Najbližšia hodina je %s o: %s a link na ňu je:",hod,cas),
+						Description: link,
+						Color: 177013,
+					}
+					s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Na tento príkaz nemáš opravnenie")
+				NemasOpravnenie(s,m)
 			}
 		case Dalsia:
 			log.Printf("Reacting to command \"%sdalsia\"", config.BotPrefix)
@@ -135,10 +145,16 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 				if cas == "" {
 					s.ChannelMessageSend(m.ChannelID, "Už nie je žiadna hodina")
 				} else {
-					s.ChannelMessageSend(m.ChannelID, "Ďalšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
+					embed := discordgo.MessageEmbed{
+						Title: fmt.Sprintf("Ďalšia hodina je %s o: %s a link na ňu je:",hod,cas),
+						Description: link,
+						Color: 177013,
+					}
+					s.ChannelMessageSendEmbed(m.ChannelID,&embed)
+					//s.ChannelMessageSend(m.ChannelID, "Ďalšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
 				}
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Na tento príkaz nemáš opravnenie")
+				NemasOpravnenie(s,m)
 			}
 		case Rozvrh:
 			log.Printf("Reacting to command \"%srozvrh\"", config.BotPrefix)
@@ -150,7 +166,7 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 				rozvrh := NewRozvrh(mes.ChannelID, mes.ID, mes.GuildID,time.Now().Weekday())
 				RozvrhEmbedy = append(RozvrhEmbedy,rozvrh)
 			} else {
-				s.ChannelMessageSend(m.ChannelID, "Na tento príkaz nemáš opravnenie")
+				NemasOpravnenie(s,m)
 			}
 		}
 	}
@@ -314,7 +330,7 @@ func HodAnnounce(s *discordgo.Session) {
 			HodAnnounceHelp(s, 6)
 		case h == hodiny[14] && m == (minuty[14]-5):
 			HodAnnounceHelp(s, 7)
-		case h == hodiny[len(config.Casy)*2-1] && m == (len(config.Casy)*2-1):
+		case h == hodiny[len(config.Casy)*2-1]:
 			for _,channelID := range config.DefaultChannelID{
 				s.ChannelMessageSendEmbed(channelID, &discord.JeKoniec)
 			}
@@ -333,17 +349,37 @@ func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
 	link :=  sd.Linky[BaseHod]
 	if hod == "" {
 		for _,channelID := range config.DefaultChannelID{
-			s.ChannelMessageSend(channelID, link)
-			s.ChannelMessageSend(channelID, "*Beep Boop. Táto správa je automatizovaná*")
+			embed := discordgo.MessageEmbed{
+				Title: link,
+				Description: "*Beep Boop. Táto správa je automatizovaná*",
+				Color: 16711680,//red
+			}
+			s.ChannelMessageSendEmbed(channelID,&embed)
+			/*s.ChannelMessageSend(channelID, link)
+			s.ChannelMessageSend(channelID, "*Beep Boop. Táto správa je automatizovaná*")*/
 		}
 		time.Sleep(time.Minute)
 	} else {
 		for _,channelID := range config.DefaultChannelID{
-			s.ChannelMessageSend(channelID, "Najbližšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
-			s.ChannelMessageSend(channelID, "*Beep Boop. Táto správa je automatizovaná*")
+			embed := discordgo.MessageEmbed{
+				Title: fmt.Sprintf("Najbližšia hodina je %s o: %s a link na ňu je:",hod,cas),
+				Description: fmt.Sprintf("%s\n*Beep Boop. Táto správa je automatizovaná*",link),
+				Color: 177013,//green
+			}
+			s.ChannelMessageSendEmbed(channelID,&embed)
+			/*s.ChannelMessageSend(channelID, "Najbližšia hodina je "+hod+" o: "+cas+" a link na ňu je: "+link)
+			s.ChannelMessageSend(channelID, "*Beep Boop. Táto správa je automatizovaná*")*/
 		}
 		time.Sleep(time.Minute)
 	}
+}
+
+func NemasOpravnenie(s *discordgo.Session, m *discordgo.MessageCreate){
+	embed := discordgo.MessageEmbed{
+		Title: "Na tento príkaz nemáš opravnenie",
+		Color: 16711680,
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 }
 
 func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
