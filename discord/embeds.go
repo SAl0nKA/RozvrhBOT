@@ -10,7 +10,7 @@ func GetHelp()discordgo.MessageEmbed{
 	var EmbedHelp = discordgo.MessageEmbed{
 		URL:   "",
 		Type:  "",
-		Title: "Help",
+		Title: "Help - Verzia 3.0.8",
 		Description: "",
 		Timestamp: "",
 		Color:     17407, //BLUE
