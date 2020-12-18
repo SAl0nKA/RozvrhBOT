@@ -202,6 +202,7 @@ func ReadConfig() error {
 		fmt.Println(sd.Casy)
 		fmt.Println(sd.Linky)
 	}*/
+	fmt.Println("Reading config file successful")
 	return nil
 }
 
@@ -260,4 +261,3 @@ func NewSchoolDay(hodiny, linky, casy []string, day time.Weekday)*SchoolDay{
 	}
 	return &s
 }
-

@@ -58,7 +58,7 @@ func Start() {
 	goBot.AddHandler(HandleReaction)
 
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions)
-
+	fmt.Println("Opening connection")
 	err = goBot.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
