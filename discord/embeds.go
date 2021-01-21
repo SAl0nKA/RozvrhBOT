@@ -2,23 +2,15 @@ package discord
 
 import (
 	"../config"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"time"
 )
 
 func GetHelp()discordgo.MessageEmbed{
 	var EmbedHelp = discordgo.MessageEmbed{
-		URL:   "",
-		Type:  "",
-		Title: "Help - Verzia 3.0.8",
-		Description: "",
-		Timestamp: "",
+		Title: fmt.Sprintf("Help - Verzia %s",config.Version),
 		Color:     17407, //BLUE
-		Image:    nil,
-		Thumbnail: nil,
-		Video:     nil,
-		Provider:  nil,
-		Author:    nil,
 		Fields: []*discordgo.MessageEmbedField{
 			{
 				Name: config.BotPrefix + "help",
@@ -74,18 +66,14 @@ func GetDay(day time.Weekday)string {
 
 func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.MessageEmbed{
 	var EmbedRozvrhPrazdny = discordgo.MessageEmbed{
-		URL:   "",
-		Type:  "",
 		Title: "Rozvrh",
+<<<<<<< HEAD
 		Description: "Dnes nie sú žiadne hodiny, jeb na to",
 		Timestamp: "",
+=======
+		Description: "Dnes nie sú žiadne hodiny",
+>>>>>>> 8754588 (Save)
 		Color: 16711680, //RED
-		Image:    nil,
-		Thumbnail: nil,
-		Video:     nil,
-		Provider:  nil,
-		Author:    nil,
-		Fields: nil,
 	}
 	if day == 0{
 		day = time.Now().Weekday()
@@ -104,17 +92,8 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 			fields = append(fields,&f)
 		}
 		var EmbedRozvrh = discordgo.MessageEmbed{
-			URL:   "",
-			Type:  "",
 			Title: "Rozvrh - " + GetDay(day),
-			Description: "",
-			Timestamp: "",
 			Color:     16766976, //YELLOW
-			Image:    nil,
-			Thumbnail: nil,
-			Video:     nil,
-			Provider:  nil,
-			Author:    nil,
 			Fields: fields,
 		}
 		return EmbedRozvrh
@@ -124,18 +103,15 @@ func ReturnEmbedRozvrh(rozvrh, casy, linky []string, day time.Weekday)discordgo.
 }
 
 var JeKoniec = discordgo.MessageEmbed{
+<<<<<<< HEAD
 	URL:   "",
 	Type:  "",
 	Title: "Už je koniec, palte dopiče",
+=======
+	Title: "Je koniec. Ste voľní!",
+>>>>>>> 8754588 (Save)
 	Description: "Beep Boop. Táto správa je automatizovaná",
-	Timestamp: "",
 	Color:     16711680, //RED
-	Image:    nil,
-	Thumbnail: nil,
-	Video:     nil,
-	Provider:  nil,
-	Author:    nil,
-	Fields: nil,
 }
 
 

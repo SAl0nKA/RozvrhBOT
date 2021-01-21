@@ -22,10 +22,11 @@ var (
 	Hodiny				[]int
 	Minuty				[]int
 	IDstring			string
-	config    			configStruct
+	//config    			configStruct
 	SchoolDays			[]*SchoolDay
+	Version				string = "3.0.9"
 )
-
+/*
 type configStruct struct {
 	Token     			string
 	BotPrefix 			string
@@ -39,6 +40,7 @@ type configStruct struct {
 	DefaultChannelID 	[]string
 	IDstring			string
 }
+*/
 
 type SchoolDay struct {
 	Hodiny	[]string
@@ -76,21 +78,25 @@ func ReadConfig() error {
 	}
 
 	Token = os.Getenv("DISCORD_BOT_TOKEN")
-	config.Token = Token
-	if config.Token == "" {
+	//config.Token = Token
+	if Token == "" {
 		return errors.New("no DISCORD_BOT_TOKEN provided")
 	}
 
 	BotPrefix = os.Getenv("BOT_PREFIX")
+<<<<<<< HEAD
 	config.BotPrefix = BotPrefix
 	/*if config.BotPrefix == "" {
 		return errors.New("no BOT_PREFIX provided")
 	}*/
+=======
+	//config.BotPrefix = BotPrefix
+>>>>>>> 8754588 (Save)
 
 	IDstring = os.Getenv("IDS")
-	config.IDstring = IDstring
+	//config.IDstring = IDstring
 	IDs = strings.Split(os.Getenv("IDS"),",")
-	config.IDs = IDs
+	//config.IDs = IDs
 	if config.IDstring == "" {
 		fmt.Println("No IDS; everyone will be able to use the bot")
 	}

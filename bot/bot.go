@@ -372,7 +372,7 @@ func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
 	} else {
 		for _,channelID := range config.DefaultChannelID{
 			embed := discordgo.MessageEmbed{
-				Title: fmt.Sprintf("Najbližšia hodina je %s o: %s a link na ňu je:",hod,cas),
+				Title: fmt.Sprintf("Najbližšia hodina je %s o: %s",hod,cas),
 				Description: fmt.Sprintf("%s\n*Beep Boop. Táto správa je automatizovaná*",link),
 				Color: 177013,//green
 			}
