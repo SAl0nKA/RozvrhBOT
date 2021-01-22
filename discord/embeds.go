@@ -111,6 +111,12 @@ var JeKoniec = discordgo.MessageEmbed{
 >>>>>>> a833281 (Upratanie kodu)
 }
 
-
+func NemasOpravnenie(s *discordgo.Session, m *discordgo.MessageCreate){
+	embed := discordgo.MessageEmbed{
+		Title: "Na tento príkaz nemáš opravnenie",
+		Color: 16711680,
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID,&embed)
+}
 
 
