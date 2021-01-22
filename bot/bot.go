@@ -8,60 +8,30 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 )
 
-type CommandType int
-
-type RozvrhEmbed struct {
-	ChannelID 		string
-	MessageID		string
-	GuildID			string
-	EditDay 		time.Weekday
-}
-
-const (
-	Help CommandType = iota
-	Ping
-	Pong
-	Hod
-	Dalsia
-	Rozvrh
-	Null
-)
-
-var CommandTypeStringMapping = map[string]CommandType{
-	"help":    Help,
-	"ping":    Ping,
-	"pong":    Pong,
-	"hod":     Hod,
-	"dalsia":  Dalsia,
-	"rozvrh":  Rozvrh,
-	"":        Null,
-}
-var RozvrhEmbedy []*RozvrhEmbed
-var goBot *discordgo.Session
-var Emojis = []string{"◀️", "▶️", "🔄", "❌"}
-
 func Start() {
 	goBot, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
-		fmt.Println("error creating Discord session,", err)
+		log.Println("[RozvrhBOT] error creating Discord session,", err)
 		return
 	}
 
-	goBot.AddHandler(ready)
-	goBot.AddHandler(HandleCommand)
-	//goBot.AddHandler(messageCreate)
-	goBot.AddHandler(HandleReaction)
+	goBot.AddHandler(Innit)
+	goBot.AddHandler(discord.HandleCommand)
+	goBot.AddHandler(discord.HandleReaction)
 
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions)
+<<<<<<< HEAD
 
+=======
+	log.Println("[RozvrhBOT] Opening connection")
+>>>>>>> a833281 (Upratanie kodu)
 	err = goBot.Open()
 	if err != nil {
-		fmt.Println("error opening connection,", err)
+		log.Println("[RozvrhBOT] error opening connection,", err)
 		return
 	}
 
@@ -73,13 +43,16 @@ func Start() {
 	goBot.Close()
 }
 
-func ready(s *discordgo.Session, event *discordgo.Ready) {
-	log.Println("Updating status")
+func Innit(s *discordgo.Session, event *discordgo.Ready) {
+	log.Println("[RozvrhBOT] Updating status")
 	s.UpdateStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
-	t := time.Now().Weekday()
-	if config.DefaultChannelID != nil {
-		log.Println("Checking for current day")
+
+	//Lesson announcing
+	if config.DefaultChannelsID != nil {
+		log.Println("[RozvrhBOT] Checking for current day")
+		t := time.Now().Weekday()
 		if t <= 5 && t != 0 {
+<<<<<<< HEAD
 			log.Println("Running HodAnnounce function in a separate proccess")
 			go HodAnnounce(s)
 		} else {
@@ -463,3 +436,14 @@ func ContainsIDs(roles []string, ids []string) bool {
 	}
 	return false
 }
+=======
+			log.Println("[RozvrhBOT] Running automatic lesson announcing")
+			go discord.HodAnnounce(s)
+		} else {
+			log.Println("[RozvrhBOT] Not running automatic lesson announcing")
+		}
+	} else {
+		log.Println("[RozvrhBOT] Not running automatic lesson announcing")
+	}
+}
+>>>>>>> a833281 (Upratanie kodu)
