@@ -40,6 +40,12 @@ func GetHelp(s *discordgo.Session,m *discordgo.MessageCreate){
 	s.ChannelMessageSendEmbed(m.ChannelID, &EmbedHelp)
 }
 
-
+func NemasOpravnenie(s *discordgo.Session, m *discordgo.MessageCreate){
+	embed := discordgo.MessageEmbed{
+		Title: "Na tento príkaz nemáš opravnenie",
+		Color: 16711680,
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID,&embed)
+}
 
 

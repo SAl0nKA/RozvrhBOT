@@ -30,3 +30,13 @@ func ContainsIDs(roles []string, ids []string) bool {
 	}
 	return false
 }
+
+/*
+func ContainsOne(element string, slice []string) bool {
+	for _, ele := range slice {
+		if element == ele{
+			return true
+		}
+	}
+	return false
+}*/
