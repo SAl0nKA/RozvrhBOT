@@ -1,7 +1,6 @@
 package discord
 
 import (
-	"../config"
 	"github.com/bwmarrin/discordgo"
 	"log"
 	"time"
@@ -24,7 +23,7 @@ func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if Rozvrh == nil {
 		return
 	}
-	if Rozvrh.MessageID == r.MessageID && Rozvrh.ChannelID == r.ChannelID && (ContainsIDs(member.Roles, config.RoleIDs) || config.RoleIDs == nil){
+	if Rozvrh.MessageID == r.MessageID && Rozvrh.ChannelID == r.ChannelID && PermissionsCheck(member.Roles){
 		channel, err := s.Channel(r.ChannelID)
 		if err != nil {
 			log.Println("Couldn't get the channel name: ", err)

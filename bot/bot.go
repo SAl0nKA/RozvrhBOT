@@ -23,11 +23,11 @@ func Start() {
 	goBot.AddHandler(discord.HandleCommand)
 	goBot.AddHandler(discord.HandleReaction)
 
-	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions)
+	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages /*| discordgo.IntentsGuildVoiceStates*/ | discordgo.IntentsGuildMessageReactions)
 	log.Println("[RozvrhBOT] Opening connection")
 	err = goBot.Open()
 	if err != nil {
-		log.Println("[RozvrhBOT] error opening connection,", err)
+		log.Println("[RozvrhBOT] Error opening connection:", err)
 		return
 	}
 
@@ -41,7 +41,7 @@ func Start() {
 
 func Innit(s *discordgo.Session, event *discordgo.Ready) {
 	log.Println("[RozvrhBOT] Updating status")
-	s.UpdateStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
+	s.UpdateGameStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
 
 	//Lesson announcing
 	if config.DefaultChannelsID != nil {

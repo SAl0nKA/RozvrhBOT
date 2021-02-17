@@ -21,7 +21,7 @@ func main() {
 	}
 	f, err := os.OpenFile("logs.txt", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
-		log.Fatalf("error opening file: %v", err)
+		log.Fatalf("Error opening logs file: %v", err)
 	}
 	defer f.Close()
 	wrt := io.MultiWriter(os.Stdout, f)
