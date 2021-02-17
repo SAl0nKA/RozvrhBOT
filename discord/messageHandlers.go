@@ -50,6 +50,10 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "Pong!")
 		case Pong:
 			log.Printf("[RozvrhBOT] Reacting to command \"%spong\"", config.BotPrefix)
+			if !PermissionsCheck(m.Member.Roles){
+				NemasOpravnenie(s,m)
+				return
+			}
 			s.ChannelMessageSend(m.ChannelID, "Ping!")
 		case Hod:
 			log.Printf("[RozvrhBOT] Reacting to command \"%shod\"", config.BotPrefix)

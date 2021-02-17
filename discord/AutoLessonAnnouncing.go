@@ -13,7 +13,6 @@ func HodAnnounce(s *discordgo.Session) {
 	hodiny := config.Hodiny
 	minuty := config.Minuty
 	for {
-		time.Sleep(time.Second * 35)
 		t := time.Now()
 		h := t.Hour()
 		m := t.Minute()
@@ -49,11 +48,16 @@ func HodAnnounce(s *discordgo.Session) {
 			log.Printf("Turning off the automatic lesson announcing")
 			break
 		}
+		time.Sleep(time.Second * 35)
 	}
 }
 
 func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
+	log.Println("[RozvrhBOT] Announcing lesson")
 	sd := GetSChoolday(0)
+	if len(sd.Hodiny)-1<BaseHod{
+		return
+	}
 	hod := sd.Hodiny[BaseHod]
 	cas := sd.Casy[BaseHod]
 	link :=  sd.Linky[BaseHod]

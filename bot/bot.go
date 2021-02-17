@@ -23,15 +23,19 @@ func Start() {
 	goBot.AddHandler(discord.HandleCommand)
 	goBot.AddHandler(discord.HandleReaction)
 
+<<<<<<< HEAD
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions)
 <<<<<<< HEAD
 
 =======
+=======
+	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages /*| discordgo.IntentsGuildVoiceStates*/ | discordgo.IntentsGuildMessageReactions)
+>>>>>>> 7cb02d3 (Save)
 	log.Println("[RozvrhBOT] Opening connection")
 >>>>>>> a833281 (Upratanie kodu)
 	err = goBot.Open()
 	if err != nil {
-		log.Println("[RozvrhBOT] error opening connection,", err)
+		log.Println("[RozvrhBOT] Error opening connection:", err)
 		return
 	}
 
@@ -45,7 +49,7 @@ func Start() {
 
 func Innit(s *discordgo.Session, event *discordgo.Ready) {
 	log.Println("[RozvrhBOT] Updating status")
-	s.UpdateStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
+	s.UpdateGameStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
 
 	//Lesson announcing
 	if config.DefaultChannelsID != nil {

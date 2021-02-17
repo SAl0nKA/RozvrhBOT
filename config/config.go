@@ -18,6 +18,11 @@ type SchoolDay struct {
 	day 	time.Weekday
 }
 
+type cas struct {
+	hodina 		int
+	minuta		int
+}
+
 var (
 	Token     			string
 	BotPrefix 			string
@@ -32,7 +37,6 @@ var (
 	SchoolDays			[]*SchoolDay
 	EndMessage			string
 	Version 			string = "v3.0.9"
-
 )
 
 func ReadConfig() error {
@@ -209,9 +213,12 @@ func NewSchoolDay(hodiny, linky, casy []string, day time.Weekday)*SchoolDay{
 }
 
 func SplitCasy(casy []string)([]int, []int){
-	var casySplit []string
-	var hodiny []int
-	var minuty []int
+	var (
+		casySplit []string
+		hodiny []int
+		minuty []int
+	)
+
 	//casy 7:50-8:35
 	for _,cas := range casy{
 		//7:50
