@@ -1,8 +1,7 @@
 package discord
 
 import (
-	"../config"
-	//"../discord"
+	"github.com/SAl0nKA/RozvrhBOT/config"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"log"

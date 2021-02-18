@@ -1,7 +1,7 @@
 package discord
 
 import (
-	"../config"
+	"github.com/SAl0nKA/RozvrhBOT/config"
 	"time"
 )
 
