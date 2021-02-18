@@ -1,10 +1,10 @@
 package bot
 
 import (
-	"../config"
-	"../discord"
-	"fmt"
+	"github.com/SAl0nKA/RozvrhBOT/config"
+	"github.com/SAl0nKA/RozvrhBOT/discord"
 	"github.com/bwmarrin/discordgo"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"

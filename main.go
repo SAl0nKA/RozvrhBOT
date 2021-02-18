@@ -1,13 +1,13 @@
 package main
 
 import (
-	"./config"
 	"fmt"
+	"github.com/SAl0nKA/RozvrhBOT/bot"
+	"github.com/SAl0nKA/RozvrhBOT/config"
 	"io"
 	"log"
 	"os"
 	"time"
-	"./bot"
 )
 
 func main() {

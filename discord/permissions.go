@@ -2,7 +2,7 @@ package discord
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"../config"
+	"github.com/SAl0nKA/RozvrhBOT/config"
 )
 
 func PermissionsCheck(Roles []string)bool{
