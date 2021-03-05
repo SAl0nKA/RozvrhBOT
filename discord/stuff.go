@@ -82,6 +82,7 @@ func Hodiny(dalsia int) (string, string, string) {
 			link :=  sd.Linky[6+dalsia]
 			return hod, link, cas
 		default:
+			//TODO vytvoriť oranžovy embed
 			link := "Momentalne nie je žiadna hodina"
 			hod := ""
 			cas := ""

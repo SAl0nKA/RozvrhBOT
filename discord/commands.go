@@ -6,11 +6,8 @@ import (
 	"time"
 )
 
+//TODO odstradnit IsDM, je to nepotrebne
 func CommandHod(s *discordgo.Session, m *discordgo.MessageCreate){
-	if IsDM(m.Member){
-		s.ChannelMessageSend(m.ChannelID,"Tento príkaz je prístupny iba pre členov serveru s prislušnou rolou")
-		return
-	}
 	if PermissionsCheck(m.Member.Roles){
 		hod, link, cas := Hodiny(0)
 		if hod == "" {

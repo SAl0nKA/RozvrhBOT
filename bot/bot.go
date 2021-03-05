@@ -15,7 +15,7 @@ import (
 func Start() {
 	goBot, err := discordgo.New("Bot " + config.Token)
 	if err != nil {
-		log.Println("[RozvrhBOT] error creating Discord session,", err)
+		log.Println("[RozvrhBOT] Error creating Discord session,", err)
 		return
 	}
 
@@ -24,6 +24,7 @@ func Start() {
 	goBot.AddHandler(discord.HandleReaction)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions)
 <<<<<<< HEAD
 
@@ -31,6 +32,11 @@ func Start() {
 =======
 	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds | discordgo.IntentsGuildMessages /*| discordgo.IntentsGuildVoiceStates*/ | discordgo.IntentsGuildMessageReactions)
 >>>>>>> 7cb02d3 (Save)
+=======
+	goBot.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsGuilds |
+		discordgo.IntentsGuildMessages | discordgo.IntentsGuildMessageReactions)
+
+>>>>>>> 5ba9dde (pridané TODO)
 	log.Println("[RozvrhBOT] Opening connection")
 >>>>>>> a833281 (Upratanie kodu)
 	err = goBot.Open()
@@ -38,7 +44,6 @@ func Start() {
 		log.Println("[RozvrhBOT] Error opening connection:", err)
 		return
 	}
-
 
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
@@ -51,6 +56,7 @@ func Innit(s *discordgo.Session, event *discordgo.Ready) {
 	log.Println("[RozvrhBOT] Updating status")
 	s.UpdateGameStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
 
+	//TODO zmeniť aby mohol bežať stale, vratane vikendov a dať to do vedlajšej funkcie
 	//Lesson announcing
 	if config.DefaultChannelsID != nil {
 		log.Println("[RozvrhBOT] Checking for current day")
