@@ -47,7 +47,7 @@ func HodAnnounce(s *discordgo.Session) {
 			log.Printf("Turning off the automatic lesson announcing")
 			break
 		}
-		time.Sleep(time.Second * 35)
+		time.Sleep(time.Second * 20)
 	}
 }
 

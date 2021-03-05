@@ -29,7 +29,7 @@ func GetHelp(s *discordgo.Session,m *discordgo.MessageCreate){
 			},
 			{
 				Name: config.BotPrefix + "dalsia",
-				Value:  "Vypíše ďalšiu hodinu",
+				Value:  "Vypíše hodinu za najbližšou hodinou",
 			},
 			{
 				Name: config.BotPrefix + "rozvrh",

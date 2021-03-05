@@ -9,6 +9,7 @@ import (
 var Emojis = []string{"◀️", "▶️", "🔄", "❌"}
 
 //TODO reforma reakcii,je tu bordel
+//TODO bug pri nevyplnenych RolesIDs pri reakciach
 func HandleReaction(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if r.UserID == s.State.User.ID {
 		return

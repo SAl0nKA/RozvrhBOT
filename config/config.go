@@ -17,7 +17,7 @@ type SchoolDay struct {
 	Casy 	[]string
 	day 	time.Weekday
 }
-
+//TODO vytvoriť lepši spôsob ukladania časov
 type cas struct {
 	hodina 		int
 	minuta		int
@@ -36,7 +36,7 @@ var (
 	RoleIDSstring		string
 	SchoolDays			[]*SchoolDay
 	EndMessage			string
-	Version 			string = "v3.0.9"
+	Version 			string = "v3.1.0"
 )
 
 func ReadConfig() error {

@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("Error opening logs file: %v", err)
 	}
 	defer f.Close()
-	wrt := io.MultiWriter(os.Stdout, f)
+	wrt := io.MultiWriter(os.Stdout,/*os.Stderr,*/ f)
 	log.SetOutput(wrt)
 	bot.Start()
 }
