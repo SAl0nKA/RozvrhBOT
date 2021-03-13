@@ -31,69 +31,51 @@ func GetSChoolday(day time.Weekday) *config.SchoolDay {
 	}
 }
 
-func Hodiny(dalsia int) (string, string, string) {
-	hodiny := config.Hodiny
-	minuty := config.Minuty
+func Hodiny(dalsia int) (hod, link, cas string) {
+	konce := config.KoniecHodin
 	t := time.Now()
 	h := t.Hour()
 	m := t.Minute()
-	if t.Weekday() > 0 && t.Weekday() < 6{
-		switch {
-		case h <= hodiny[1] ||(h==hodiny[1] && m < minuty[1]):
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[0+dalsia]
-			cas := sd.Casy[0+dalsia]
-			link :=  sd.Linky[0+dalsia]
-			return hod, link, cas
-		case (h == hodiny[2] && m >= minuty[1]) || (h == hodiny[3] && m < minuty[3]):
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[1+dalsia]
-			cas := sd.Casy[1+dalsia]
-			link :=  sd.Linky[1+dalsia]
-			return hod, link, cas
-		case (h == hodiny[4] && m >= minuty[3]) || (h == hodiny[5] && m < minuty[5]):
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[2+dalsia]
-			cas := sd.Casy[2+dalsia]
-			link :=  sd.Linky[2+dalsia]
-			return hod, link, cas
-		case (h == hodiny[6] && m >= minuty[5]) || (h == hodiny[7] && m < minuty[7]):
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[3+dalsia]
-			cas := sd.Casy[3+dalsia]
-			link :=  sd.Linky[3+dalsia]
-			return hod, link, cas
-		case (h == hodiny[8] && m >= minuty[7]) || (h == hodiny[9] && m < minuty[9]):
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[4+dalsia]
-			cas := sd.Casy[4+dalsia]
-			link :=  sd.Linky[4+dalsia]
-			return hod, link, cas
-		case (h == hodiny[10] && m >= minuty[9]) || (h == hodiny[11] && m < minuty[11]):
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[5+dalsia]
-			cas := sd.Casy[5+dalsia]
-			link :=  sd.Linky[5+dalsia]
-			return hod, link, cas
-		case h == hodiny[12] && m >= minuty[11]:
-			sd := GetSChoolday(0)
-			hod := sd.Hodiny[6+dalsia]
-			cas := sd.Casy[6+dalsia]
-			link :=  sd.Linky[6+dalsia]
-			return hod, link, cas
-		default:
-			//TODO vytvoriť oranžovy embed
-			link := "Momentalne nie je žiadna hodina"
-			hod := ""
-			cas := ""
-			return hod, link, cas
-		}
-	} else {
-		link := "Momentalne nie je žiadna hodina"
-		hod := ""
-		cas := ""
-		return hod, link, cas
+	sd := GetSChoolday(0)
+	switch {
+	case h <= konce[0].Hodina && m < konce[0].Minuta:
+		hod = sd.Hodiny[0+dalsia]
+		cas = sd.Casy[0+dalsia]
+		link =  sd.Linky[0+dalsia]
+	case (h == konce[0].Hodina && m > konce[0].Minuta) || (h == konce[1].Hodina && m < konce[1].Minuta):
+		hod = sd.Hodiny[1+dalsia]
+		cas = sd.Casy[1+dalsia]
+		link = sd.Linky[1+dalsia]
+	case (h == konce[1].Hodina && m > konce[1].Minuta) || (h == konce[2].Hodina && m < konce[2].Minuta):
+		hod = sd.Hodiny[2+dalsia]
+		cas = sd.Casy[2+dalsia]
+		link =  sd.Linky[2+dalsia]
+	case (h == konce[2].Hodina && m > konce[2].Minuta) || (h == konce[3].Hodina && m < konce[3].Minuta):
+		hod = sd.Hodiny[3+dalsia]
+		cas = sd.Casy[3+dalsia]
+		link =  sd.Linky[3+dalsia]
+	case (h == konce[3].Hodina && m > konce[3].Minuta) || (h == konce[4].Hodina && m < konce[4].Minuta):
+		hod = sd.Hodiny[4+dalsia]
+		cas = sd.Casy[4+dalsia]
+		link =  sd.Linky[4+dalsia]
+	case (h == konce[4].Hodina && m > konce[4].Minuta) || (h == konce[5].Hodina && m < konce[5].Minuta):
+		hod = sd.Hodiny[5+dalsia]
+		cas = sd.Casy[5+dalsia]
+		link =  sd.Linky[5+dalsia]
+	case (h == konce[5].Hodina && m > konce[5].Minuta) || (h == konce[6].Hodina && m < konce[6].Minuta):
+		hod = sd.Hodiny[6+dalsia]
+		cas = sd.Casy[6+dalsia]
+		link =  sd.Linky[6+dalsia]
+	case (h == konce[6].Hodina && m > konce[6].Minuta) || (h == konce[7].Hodina && m < konce[7].Minuta):
+		hod = sd.Hodiny[7+dalsia]
+		cas = sd.Casy[7+dalsia]
+		link =  sd.Linky[7+dalsia]
+	default:
+		link = ""
+		hod = ""
+		cas = ""
 	}
+	return
 }
 
 func GetDayName(day time.Weekday)string {

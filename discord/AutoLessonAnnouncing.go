@@ -9,31 +9,39 @@ import (
 )
 
 func HodAnnounce(s *discordgo.Session) {
-	hodiny := config.Hodiny
-	minuty := config.Minuty
+	zaciatky := config.ZaciatokHodin
 	for {
 		t := time.Now()
+		w := t.Weekday()
+		if w == 0 || w == 6{
+			time.Sleep(time.Hour*12)
+			return
+		}
 		h := t.Hour()
 		m := t.Minute()
-		//TODO prerobiť tento retardovany switch
+
 		switch {
-		case h == hodiny[0] && m == (minuty[0]-5):
+		case zaciatky[0].Hodina == h && (zaciatky[0].Minuta-5) == m:
 			HodAnnounceHelp(s, 0)
-		case h == hodiny[2] && m == (minuty[2]-5):
+		case zaciatky[1].Hodina == h && (zaciatky[1].Minuta-5) == m:
 			HodAnnounceHelp(s, 1)
-		case h == hodiny[4] && m == (minuty[4]-5):
+		case zaciatky[2].Hodina == h && (zaciatky[2].Minuta-5) == m:
 			HodAnnounceHelp(s, 2)
-		case h == hodiny[6] && m == (minuty[6]-5):
+		case zaciatky[3].Hodina == h && (zaciatky[3].Minuta-5) == m:
 			HodAnnounceHelp(s, 3)
-		case h == hodiny[8] && m == (minuty[8]-5):
+		case zaciatky[4].Hodina == h && (zaciatky[4].Minuta-5) == m:
 			HodAnnounceHelp(s, 4)
-		case h == hodiny[10] && m == (minuty[10]-5):
+		case zaciatky[5].Hodina == h && (zaciatky[5].Minuta-5) == m:
 			HodAnnounceHelp(s, 5)
-		case h == hodiny[12] && m == (minuty[12]-5):
+		case zaciatky[6].Hodina == h && (zaciatky[6].Minuta-5) == m:
 			HodAnnounceHelp(s, 6)
-		case h == hodiny[14] && m == (minuty[14]-5):
+		case zaciatky[7].Hodina == h && (zaciatky[7].Minuta-5) == m:
 			HodAnnounceHelp(s, 7)
-		case h == hodiny[len(config.Casy)*2-1]:
+		}
+
+		KoniecDna := config.KoniecHodin[w]
+		if KoniecDna.Hodina == h && KoniecDna.Hodina == m{
+			log.Println("[RozvrhBOT] Sending end message")
 			for _,channelID := range config.DefaultChannelsID{
 				JeKoniec := discordgo.MessageEmbed{
 					Title: config.EndMessage,
@@ -42,35 +50,22 @@ func HodAnnounce(s *discordgo.Session) {
 				}
 				s.ChannelMessageSendEmbed(channelID, &JeKoniec)
 			}
+			time.Sleep(time.Hour)
 		}
-		if h >= hodiny[len(config.Casy)*2-1] {
-			log.Printf("Turning off the automatic lesson announcing")
-			break
-		}
+
 		time.Sleep(time.Second * 20)
 	}
 }
 
 func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
-	log.Println("[RozvrhBOT] Announcing lesson")
 	sd := GetSChoolday(0)
-	if len(sd.Hodiny)-1<BaseHod{
-		return
-	}
 	hod := sd.Hodiny[BaseHod]
 	cas := sd.Casy[BaseHod]
 	link :=  sd.Linky[BaseHod]
 	if hod == "" {
-		for _,channelID := range config.DefaultChannelsID{
-			embed := discordgo.MessageEmbed{
-				Title: link,
-				Description: "*Beep Boop. Táto správa je automatizovaná*",
-				Color: 16711680,//red
-			}
-			s.ChannelMessageSendEmbed(channelID,&embed)
-		}
-		time.Sleep(time.Minute)
+		return
 	} else {
+		log.Println("[RozvrhBOT] Announcing lesson")
 		for _,channelID := range config.DefaultChannelsID{
 			embed := discordgo.MessageEmbed{
 				Title: fmt.Sprintf("Najbližšia hodina je %s o %s",hod,cas),
