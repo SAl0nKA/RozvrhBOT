@@ -18,7 +18,6 @@ type SchoolDay struct {
 	KoniecVyuc		cas
 }
 
-//TODO vytvoriť lepši spôsob ukladania časov
 type cas struct {
 	Hodina 		int
 	Minuta		int
@@ -100,6 +99,7 @@ func ReadConfig() error {
 	//TODO pridať možnosť zapnutia koncovych sprav
 	EndMessage = os.Getenv("END_MESSAGE")
 	if EndMessage == ""{
+		log.Println("[RozvrhBOT][Warning] No END_MESSAGE; using default message")
 		EndMessage = "Konečne je koniec."
 	}
 
@@ -152,6 +152,9 @@ func ReadConfig() error {
 	for _, den := range Dni{
 		if len(den) > 8{
 			return errors.New("There are more than 8 lessons in the config file")
+		}
+		if len(den) > len(CasyStrings){
+			return errors.New("There are more lessons than set times")
 		}
 
 		var (
