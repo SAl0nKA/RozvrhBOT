@@ -48,7 +48,7 @@ func Ready(s *discordgo.Session, event *discordgo.Ready) {
 
 func GoRoutineInnit(s *discordgo.Session){
 	if config.DefaultChannelsID != nil {
-		log.Println("Running automatic lesson announcing")
+		log.Println("[RozvrhBOT] Running automatic lesson announcing")
 		go discord.HodAnnounce(s)
 	} else {
 		log.Println("[RozvrhBOT] Not running automatic lesson announcing")
