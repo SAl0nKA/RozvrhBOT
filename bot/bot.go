@@ -1,15 +1,14 @@
 package bot
 
 import (
+	"fmt"
 	"github.com/SAl0nKA/RozvrhBOT/config"
 	"github.com/SAl0nKA/RozvrhBOT/discord"
 	"github.com/bwmarrin/discordgo"
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 )
 
 func Start() {
@@ -19,7 +18,7 @@ func Start() {
 		return
 	}
 
-	goBot.AddHandler(Innit)
+	goBot.AddHandler(Ready)
 	goBot.AddHandler(discord.HandleCommand)
 	goBot.AddHandler(discord.HandleReaction)
 
@@ -45,6 +44,8 @@ func Start() {
 		return
 	}
 
+	GoRoutineInnit(goBot)
+
 	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
@@ -52,13 +53,28 @@ func Start() {
 	goBot.Close()
 }
 
-func Innit(s *discordgo.Session, event *discordgo.Ready) {
+func Ready(s *discordgo.Session, event *discordgo.Ready) {
 	log.Println("[RozvrhBOT] Updating status")
 	s.UpdateGameStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
 
-	//TODO zmeniť aby mohol bežať stale, vratane vikendov a dať to do vedlajšej funkcie
-	//Lesson announcing
+	////Lesson announcing
+	//if config.DefaultChannelsID != nil {
+	//	log.Println("[RozvrhBOT] Checking for current day")
+	//	t := time.Now().Weekday()
+	//	if t <= 5 && t != 0 {
+	//		log.Println("[RozvrhBOT] Running automatic lesson announcing")
+	//		go discord.HodAnnounce(s)
+	//	} else {
+	//		log.Println("[RozvrhBOT] Not running automatic lesson announcing")
+	//	}
+	//} else {
+	//	log.Println("[RozvrhBOT] Not running automatic lesson announcing")
+	//}
+}
+
+func GoRoutineInnit(s *discordgo.Session){
 	if config.DefaultChannelsID != nil {
+<<<<<<< HEAD
 		log.Println("[RozvrhBOT] Checking for current day")
 		t := time.Now().Weekday()
 		if t <= 5 && t != 0 {
@@ -452,6 +468,10 @@ func ContainsIDs(roles []string, ids []string) bool {
 		} else {
 			log.Println("[RozvrhBOT] Not running automatic lesson announcing")
 		}
+=======
+		log.Println("Running automatic lesson announcing")
+		go discord.HodAnnounce(s)
+>>>>>>> 6ac4da2 (Odstranene zapinanie ALA podľa dňa)
 	} else {
 		log.Println("[RozvrhBOT] Not running automatic lesson announcing")
 	}
