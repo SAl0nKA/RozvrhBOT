@@ -56,20 +56,6 @@ func Start() {
 func Ready(s *discordgo.Session, event *discordgo.Ready) {
 	log.Println("[RozvrhBOT] Updating status")
 	s.UpdateGameStatus(0, fmt.Sprintf("%shelp",config.BotPrefix))
-
-	////Lesson announcing
-	//if config.DefaultChannelsID != nil {
-	//	log.Println("[RozvrhBOT] Checking for current day")
-	//	t := time.Now().Weekday()
-	//	if t <= 5 && t != 0 {
-	//		log.Println("[RozvrhBOT] Running automatic lesson announcing")
-	//		go discord.HodAnnounce(s)
-	//	} else {
-	//		log.Println("[RozvrhBOT] Not running automatic lesson announcing")
-	//	}
-	//} else {
-	//	log.Println("[RozvrhBOT] Not running automatic lesson announcing")
-	//}
 }
 
 func GoRoutineInnit(s *discordgo.Session){
