@@ -105,9 +105,9 @@ func ReadConfig() error {
 	}
 
 	if os.Getenv("PING_ROLE_ENABLE") == "true"{
-		PingRoleID = os.Getenv("PING_ROLE")
+		PingRoleID = os.Getenv("PING_ROLE_ID")
 		if PingRoleID == ""{
-			log.Println("[RozvrhBOT][Warning] No PING_ROLE; role pinging will not be enabled")
+			log.Println("[RozvrhBOT][Warning] No PING_ROLE_ID; role pinging will not be enabled")
 		}
 		log.Println("[RozvrhBOT] Enabling role pinging")
 		PingRoleEnable = true
