@@ -5,8 +5,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"time"
 )
-
-//TODO odstradnit IsDM, je to nepotrebne
+//TODO pridať možnosť pinguť potrebnú rolu
 func CommandHod(s *discordgo.Session, m *discordgo.MessageCreate){
 	if PermissionsCheck(m.Member.Roles){
 		hod, link, cas := Hodiny(0)
@@ -27,10 +26,6 @@ func CommandHod(s *discordgo.Session, m *discordgo.MessageCreate){
 }
 
 func CommandDalsia(s *discordgo.Session, m *discordgo.MessageCreate){
-	if IsDM(m.Member){
-		s.ChannelMessageSend(m.ChannelID,"Tento príkaz je prístupny iba pre členov serveru s prislušnou rolou")
-		return
-	}
 	hod, link, cas := Hodiny(1)
 	if PermissionsCheck(m.Member.Roles){
 		if cas == "" {
@@ -49,10 +44,6 @@ func CommandDalsia(s *discordgo.Session, m *discordgo.MessageCreate){
 }
 
 func CommandRozvrh(s *discordgo.Session, m *discordgo.MessageCreate){
-	if IsDM(m.Member){
-		s.ChannelMessageSend(m.ChannelID,"Tento príkaz je prístupny iba pre členov serveru s prislušnou rolou")
-		return
-	}
 	if PermissionsCheck(m.Member.Roles){
 		embed := ReturnRozvrh(0,"")
 		mes,_ := s.ChannelMessageSendEmbed(m.ChannelID, &embed)
