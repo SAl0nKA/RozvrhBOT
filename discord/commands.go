@@ -34,7 +34,7 @@ func CommandDalsia(s *discordgo.Session, m *discordgo.MessageCreate){
 	if PermissionsCheck(m.Member.Roles){
 		if hod == "" {
 			embed := discordgo.MessageEmbed{
-				Title: "Momentalne nie je žiadna hodina",
+				Title: "Už nenasleduje žiadna hodina",
 				Color: 15105570, //orange
 			}
 			s.ChannelMessageSendEmbed(m.ChannelID,&embed)
