@@ -5,18 +5,22 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"time"
 )
+
 //TODO pridať možnosť pinguť potrebnú rolu
 func CommandHod(s *discordgo.Session, m *discordgo.MessageCreate){
 	if PermissionsCheck(m.Member.Roles){
 		hod, link, cas := Hodiny(0)
 		if hod == "" {
-			s.ChannelMessageSend(m.ChannelID, link)
-			return
+			embed := discordgo.MessageEmbed{
+				Title: "Momentalne nie je žiadna hodina",
+				Color: 15105570, //orange
+			}
+			s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 		} else {
 			embed := discordgo.MessageEmbed{
 				Title: fmt.Sprintf("Najbližšia hodina je %s o %s",hod,cas),
 				Description: link,
-				Color: 177013,
+				Color: 177013, //green
 			}
 			s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 		}
@@ -28,13 +32,17 @@ func CommandHod(s *discordgo.Session, m *discordgo.MessageCreate){
 func CommandDalsia(s *discordgo.Session, m *discordgo.MessageCreate){
 	hod, link, cas := Hodiny(1)
 	if PermissionsCheck(m.Member.Roles){
-		if cas == "" {
-			s.ChannelMessageSend(m.ChannelID, "Už nie je žiadna hodina")
+		if hod == "" {
+			embed := discordgo.MessageEmbed{
+				Title: "Momentalne nie je žiadna hodina",
+				Color: 15105570, //orange
+			}
+			s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 		} else {
 			embed := discordgo.MessageEmbed{
 				Title: fmt.Sprintf("Ďalšia hodina je %s o %s",hod,cas),
 				Description: link,
-				Color: 177013,
+				Color: 177013,//green
 			}
 			s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 		}
