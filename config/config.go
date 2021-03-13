@@ -12,45 +12,46 @@ import (
 )
 
 type SchoolDay struct {
-	Hodiny	[]string
-	Linky	[]string
-	Casy 	[]string
-	day 	time.Weekday
+	Hodiny			[]string
+	Linky			[]string
+	Casy 			[]string
+	KoniecVyuc		cas
 }
+
 //TODO vytvoriť lepši spôsob ukladania časov
 type cas struct {
-	hodina 		int
-	minuta		int
+	Hodina 		int
+	Minuta		int
 }
 
 var (
-	Token     			string
-	BotPrefix 			string
-	Dni		 			[][]string
-	LinkKuHodine 		map[string]string
-	RoleIDs				[]string
-	Casy				[]string
-	DefaultChannelsID	[]string
-	Hodiny				[]int
-	Minuty				[]int
-	RoleIDSstring		string
-	SchoolDays			[]*SchoolDay
-	EndMessage			string
-	Version 			string = "v3.1.0"
+	Token             string
+	BotPrefix         string
+	Dni               [][]string
+	HodinaKuLinku     map[string]string
+	RoleIDs           []string
+	CasyStrings       []string
+	DefaultChannelsID []string
+	ZaciatokHodin 	  []*cas
+	KoniecHodin		  []*cas
+	RoleIDSstring     string
+	SchoolDays        []*SchoolDay
+	EndMessage        string
+	Version           string = "v3.1.0"
 )
 
 func ReadConfig() error {
 	log.Println("[RozvrhBOT] Innitializing RozvrhBOT")
 	err := godotenv.Load("config.txt")
 	if err != nil {
-		log.Println("[RozvrhBOT] Can't open config file; creating config.txt for you to use for your config")
+		log.Println("[RozvrhBOT] Can't open config.txt; creating file for you to use")
 		f, err := os.Create("config.txt")
 		if err != nil {
 			log.Println("[RozvrhBOT] Issue creating sample config.txt")
 			time.Sleep(time.Second*5)
 			os.Exit(3)
 		}
-
+		//TODO pridať komentare k jednotlivym premennym
 		_, err = f.WriteString(fmt.Sprintf("DISCORD_BOT_TOKEN=\n" +
 			"BOT_PREFIX=\n" +
 			"PONDELOK=\n" +
@@ -74,7 +75,7 @@ func ReadConfig() error {
 		return errors.New("No DISCORD_BOT_TOKEN provided; shutting down")
 	}
 
-	Casy = strings.Split(os.Getenv("CASY"),",")
+	CasyStrings = strings.Split(os.Getenv("CASY"),",")
 	if os.Getenv("CASY") == "" {
 		return errors.New("No CASY provided; shutting down")
 	}
@@ -99,14 +100,15 @@ func ReadConfig() error {
 
 	RoleIDs = strings.Split(os.Getenv("ROLES_IDS"),",")
 	if RoleIDSstring == ""{
-		log.Println("[RozvrhBOT][WARNING] No IDS; everyone will be able to use the bot")
+		log.Println("[RozvrhBOT][WARNING] No ROLES_IDS; everyone will be able to use the bot")
 	}
 
 	DefaultChannelsID = strings.Split(os.Getenv("DEFAULT_CHANNELS"),",")
-	if DefaultChannelsID == nil {
+	if DefaultChannelsID[0] == "" {
 		log.Println("[RozvrhBOT][WARNING] No DEFAULT_CHANNEL; automatic lesson announcement will not run")
 	}
 
+	//TODO pridať možnosť zapnutia koncovych sprav
 	EndMessage = os.Getenv("END_MESSAGE")
 	if EndMessage == ""{
 		EndMessage = "Konečne je koniec."
@@ -131,11 +133,11 @@ func ReadConfig() error {
 		hodiny = append(hodiny, den...)
 	}
 	var JedinecneHodiny []string
-	LinkKuHodine, err := godotenv.Read("linky.txt")
-	LinkKuHodine["-"]="Momentalne nie je žiadna hodina"
+	HodinaKuLinku, err := godotenv.Read("linky.txt")
+	HodinaKuLinku["-"]=""
 
 	if err != nil {
-		log.Println("[RozvrhBOT] Can't open config file; creating linky.txt for you to use for your config")
+		log.Println("[RozvrhBOT] Can't open linky.txt; creating sample file for you to use")
 		f, err := os.Create("linky.txt")
 		defer f.Close()
 		if err != nil {
@@ -144,6 +146,7 @@ func ReadConfig() error {
 		for _,hod := range hodiny{
 			JedinecneHodiny = AppendIfMissing(JedinecneHodiny,hod)
 		}
+
 		for _,hodina := range JedinecneHodiny{
 			if hodina != "-"{
 				f.WriteString(fmt.Sprint(hodina,"=\n"))
@@ -153,18 +156,21 @@ func ReadConfig() error {
 		os.Exit(3)
 	}
 
-	Hodiny, Minuty = SplitCasy(Casy)
+	SplitCasy(CasyStrings)
 
-	SchoolDays = append(SchoolDays,NewSchoolDay(nil,nil,nil,0))
-	for index, den := range Dni{
+	SchoolDays = append(SchoolDays,NewSchoolDay(nil,nil,nil,cas{Hodina: 0, Minuta: 0,}))
+	//Vytvorenie SchoolDay pre každy jeden deň
+	for _, den := range Dni{
 		if len(den) > 8{
 			return errors.New("There are more than 8 lessons in the config file")
 		}
+
 		var (
 			hodiny	[]string
 			linky   []string
 			casy 	[]string
 		)
+
 		for _,hodina := range den{
 			if hodina == "-"{
 				hodiny = append(hodiny,"")
@@ -172,22 +178,35 @@ func ReadConfig() error {
 				hodiny = append(hodiny,hodina)
 			}
 		}
+
 		i := 0
 		for _,hod := range den{
-			for hodina,link := range LinkKuHodine{
+			for hodina,link := range HodinaKuLinku{
 				if hod == hodina{
 					linky = append(linky, link)
 					if hod == "-"{
 						casy = append(casy,"")
 					} else {
-						casy = append(casy,Casy[i])
+						casy = append(casy,CasyStrings[i])
 					}
 					i++
 					break
 				}
 			}
 		}
-		SchoolDays = append(SchoolDays,NewSchoolDay(hodiny,linky,casy, time.Weekday(index+1)))
+
+		var koniecdna cas
+		if len(linky) > 0{
+			koniecdna = *KoniecHodin[len(hodiny)-1]
+		}
+
+		//doratanie do plnej dlžky
+		for i:=0;i<(9-len(hodiny));i++{
+			hodiny = AppendIfMissing(hodiny,"")
+			linky = AppendIfMissing(linky,"")
+			casy = AppendIfMissing(casy,"")
+		}
+		SchoolDays = append(SchoolDays,NewSchoolDay(hodiny,linky,casy,koniecdna))
 	}
 <<<<<<< HEAD
 	/*for _,sd := range SchoolDays{
@@ -202,54 +221,58 @@ func ReadConfig() error {
 	return nil
 }
 
-func NewSchoolDay(hodiny, linky, casy []string, day time.Weekday)*SchoolDay{
+func NewSchoolDay(hodiny, linky, casy []string,koniecvyuc cas)*SchoolDay{
 	s := SchoolDay{
 		Hodiny: hodiny,
 		Linky:  linky,
 		Casy:   casy,
-		day: 	day,
+		KoniecVyuc: koniecvyuc,
 	}
 	return &s
 }
 
-func SplitCasy(casy []string)([]int, []int){
-	var (
-		casySplit []string
-		hodiny []int
-		minuty []int
-	)
+func SplitCasy(casy []string){
+	var casySplit []string
 
-	//casy 7:50-8:35
+	//cas 7:50-8:35
 	for _,cas := range casy{
-		//7:50
-		casySplit = append(casySplit,strings.Split(cas,"-")[0])
-		//8:35
-		casySplit = append(casySplit,strings.Split(cas,"-")[1])
+		//7:50,8:35
+		casySplit = append(casySplit,strings.Split(cas,"-")...)
 	}
+
 	var hod int
 	var	min int
 
-	//CasySplit 7:50
-	for _, HodMin := range casySplit{
-		if HodMin == "0" {
-			hod = 0
-			min = 0
+	//casySplit 7:50
+	for i := 0; i < len(casySplit);i++{
+		hod,min = 0,0
+		hod,_ = strconv.Atoi(strings.Split(casySplit[i],":")[0])
+		min,_ = strconv.Atoi(strings.Split(casySplit[i],":")[1])
+
+		if i % 2 == 0{
+			c := cas{
+				Hodina: hod,
+				Minuta: min,
+			}
+			ZaciatokHodin = append(ZaciatokHodin,&c)
 		} else {
-			//7
-			hod,_ = strconv.Atoi(strings.Split(HodMin,":")[0])
-			//50
-			min,_ = strconv.Atoi(strings.Split(HodMin,":")[1])
+			c := cas{
+				Hodina: hod,
+				Minuta: min,
+			}
+			KoniecHodin = append(KoniecHodin,&c)
 		}
-		//Hodiny 7
-		hodiny = append(hodiny,hod)
-		//Minuty 50
-		minuty = append(minuty,min)
 	}
-	for i:=0;i<(15-len(Hodiny));i++{
-		hodiny = append(hodiny,0)
-		minuty = append(minuty,0)
+
+	//doratanie do plnej dlžky
+	c := cas{
+		Hodina: -1,
+		Minuta: -1,
 	}
-	return hodiny,minuty
+	for i:=0;i<(8-len(ZaciatokHodin));i++{
+		ZaciatokHodin = append(ZaciatokHodin,&c)
+		KoniecHodin = append(KoniecHodin,&c)
+	}
 }
 
 func AppendIfMissing(slice []string, i string) []string {
