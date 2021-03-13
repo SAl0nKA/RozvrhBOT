@@ -61,6 +61,7 @@ func Ready(s *discordgo.Session, event *discordgo.Ready) {
 func GoRoutineInnit(s *discordgo.Session){
 	if config.DefaultChannelsID != nil {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		log.Println("[RozvrhBOT] Checking for current day")
 		t := time.Now().Weekday()
 		if t <= 5 && t != 0 {
@@ -456,6 +457,9 @@ func ContainsIDs(roles []string, ids []string) bool {
 		}
 =======
 		log.Println("Running automatic lesson announcing")
+=======
+		log.Println("[RozvrhBOT] Running automatic lesson announcing")
+>>>>>>> 5d5bcd4 (male zmeny)
 		go discord.HodAnnounce(s)
 >>>>>>> 6ac4da2 (Odstranene zapinanie ALA podľa dňa)
 	} else {

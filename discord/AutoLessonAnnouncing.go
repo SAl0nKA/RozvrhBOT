@@ -14,7 +14,7 @@ func HodAnnounce(s *discordgo.Session) {
 		t := time.Now()
 		w := t.Weekday()
 		if w == 0 || w == 6{
-			time.Sleep(time.Hour*12)
+			time.Sleep(time.Hour*2)
 			return
 		}
 		h := t.Hour()
@@ -40,12 +40,16 @@ func HodAnnounce(s *discordgo.Session) {
 		}
 
 		KoniecDna := config.KoniecHodin[w]
-		if KoniecDna.Hodina == h && KoniecDna.Hodina == m{
+		if KoniecDna.Hodina == h && KoniecDna.Hodina == m && config.EndMessageEnable{
 			log.Println("[RozvrhBOT] Sending end message")
 			for _,channelID := range config.DefaultChannelsID{
 				JeKoniec := discordgo.MessageEmbed{
 					Title: config.EndMessage,
-					Description: "Beep Boop. Táto správa je automatizovaná",
+					Description: "",
+					Footer: &discordgo.MessageEmbedFooter{
+						Text:         "*Beep, Boop. Táto správa je automatizovaná*",
+						IconURL:      s.State.User.Avatar,
+					},
 					Color:     16711680, //RED
 				}
 				s.ChannelMessageSendEmbed(channelID, &JeKoniec)
@@ -66,10 +70,18 @@ func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
 		return
 	} else {
 		log.Println("[RozvrhBOT] Announcing lesson")
+		var ping string
+		if config.PingRoleEnable{
+			ping = fmt.Sprintf("\n<@&%s>",config.PingRoleID)
+		}
 		for _,channelID := range config.DefaultChannelsID{
 			embed := discordgo.MessageEmbed{
 				Title: fmt.Sprintf("Najbližšia hodina je %s o %s",hod,cas),
-				Description: fmt.Sprintf("%s\n*Beep Boop. Táto správa je automatizovaná*",link),
+				Description: fmt.Sprintf("%s%s",link,ping),
+				Footer: &discordgo.MessageEmbedFooter{
+					Text:         "*Beep, Boop. Táto správa je automatizovaná*",
+					IconURL:      s.State.User.Avatar,
+				},
 				Color: 177013,//green
 			}
 			s.ChannelMessageSendEmbed(channelID,&embed)

@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-//TODO pridať možnosť pinguť potrebnú rolu
 func CommandHod(s *discordgo.Session, m *discordgo.MessageCreate){
 	if PermissionsCheck(m.Member.Roles){
 		hod, link, cas := Hodiny(0)
