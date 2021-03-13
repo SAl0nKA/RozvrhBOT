@@ -36,6 +36,11 @@ var (
 	RoleIDSstring     string
 	SchoolDays        []*SchoolDay
 	EndMessage        string
+	PingRoleID		  string
+
+	EndMessageEnable  bool
+	PingRoleEnable	  bool
+
 	Version           string = "v3.1.0"
 )
 
@@ -44,28 +49,7 @@ func ReadConfig() error {
 	err := godotenv.Load("config.txt")
 	if err != nil {
 		log.Println("[RozvrhBOT] Can't open config.txt; creating file for you to use")
-		f, err := os.Create("config.txt")
-		if err != nil {
-			log.Println("[RozvrhBOT] Issue creating sample config.txt")
-			time.Sleep(time.Second*5)
-			os.Exit(3)
-		}
-		//TODO pridať komentare k jednotlivym premennym
-		_, err = f.WriteString(fmt.Sprintf("DISCORD_BOT_TOKEN=\n" +
-			"BOT_PREFIX=\n" +
-			"PONDELOK=\n" +
-			"UTOROK=\n" +
-			"STREDA=\n" +
-			"STVRTOK=\n" +
-			"PIATOK=\n" +
-			"ROLES_IDS=\n" +
-			"#PRIKLAD=7:50-8:35,8:40-9:25,9:35-10:20,10:40-11:25,11:35-12:20,12:30-13:10,13:20-14:00\n" +
-			"CASY=\n" +
-			"DEFAULT_CHANNELS=\n" +
-			"END_MESSAGE="))
-		f.Close()
-		time.Sleep(time.Second*5)
-		os.Exit(3)
+		CreateConfigFile()
 	}
 
 	Token = os.Getenv("DISCORD_BOT_TOKEN")
@@ -107,11 +91,26 @@ func ReadConfig() error {
 		log.Println("[RozvrhBOT][WARNING] No DEFAULT_CHANNEL; automatic lesson announcement will not run")
 	}
 
-	//TODO pridať možnosť zapnutia koncovych sprav
-	EndMessage = os.Getenv("END_MESSAGE")
-	if EndMessage == ""{
-		log.Println("[RozvrhBOT][Warning] No END_MESSAGE; using default message")
-		EndMessage = "Konečne je koniec."
+	if os.Getenv("END_MESSAGE_ENABLE") == "true"{
+		log.Println("[RozvrhBOT] Enabling sending end messages")
+		EndMessageEnable = true
+
+		EndMessage = os.Getenv("END_MESSAGE")
+		if EndMessage == ""{
+			log.Println("[RozvrhBOT][Warning] No END_MESSAGE; using default message")
+			EndMessage = "Konečne je koniec."
+		}
+	} else {
+		log.Println("[RozvrhBOT][Warning] End messages not enabled")
+	}
+
+	if os.Getenv("PING_ROLE_ENABLE") == "true"{
+		PingRoleID = os.Getenv("PING_ROLE")
+		if PingRoleID == ""{
+			log.Println("[RozvrhBOT][Warning] No PING_ROLE; role pinging will not be enabled")
+		}
+		log.Println("[RozvrhBOT] Enabling role pinging")
+		PingRoleEnable = true
 	}
 
 	//hodiny pre jednotlive dni
@@ -136,6 +135,7 @@ func ReadConfig() error {
 	HodinaKuLinku, err := godotenv.Read("linky.txt")
 	HodinaKuLinku["-"]=""
 
+	//vytvorenie linky.txt
 	if err != nil {
 		log.Println("[RozvrhBOT] Can't open linky.txt; creating sample file for you to use")
 		f, err := os.Create("linky.txt")
@@ -286,6 +286,7 @@ func AppendIfMissing(slice []string, i string) []string {
 	}
 	return append(slice, i)
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 func NewSchoolDay(hodiny, linky, casy []string, day time.Weekday)*SchoolDay{
@@ -301,3 +302,42 @@ func NewSchoolDay(hodiny, linky, casy []string, day time.Weekday)*SchoolDay{
 =======
 }
 >>>>>>> a833281 (Upratanie kodu)
+=======
+}
+
+func CreateConfigFile(){
+	f, err := os.Create("config.txt")
+	defer f.Close()
+	if err != nil {
+		log.Println("[RozvrhBOT] Issue creating sample config.txt")
+		time.Sleep(time.Second*5)
+		os.Exit(3)
+	}
+
+	//TODO pridať komentare k jednotlivym premennym
+	_, err = f.WriteString(fmt.Sprintf("#Token ktorým sa bot prihlasuje\nDISCORD_BOT_TOKEN=\n\n" +
+		"#Prefix pred príkazy pre bota\nBOT_PREFIX=\n\n" +
+		"#Miesto na hodiny v jednotlivé dni, zadavajte vo formáte FYZ,FYZ,FYZ\nPONDELOK=\n" +
+		"UTOROK=\n" +
+		"STREDA=\n" +
+		"STVRTOK=\n" +
+		"PIATOK=\n\n" +
+		"#ID rolí ktoré majú mať prístup k príkazom\n#Ak nechané prázdne, každy bude mať prístup k príkazo\nROLES_IDS=\n\n" +
+		"#Časy v ktorých prebiehajú hodiny, zadajte všetky časy od prvej po poslednú hodinu, príklad:\n" +
+		"#CASY=7:50-8:35,8:40-9:25,9:35-10:20,10:40-11:25,11:35-12:20,12:30-13:10,13:20-14:00\n" +
+		"CASY=\n\n" +
+		"#ID kanálov do ktorých sa automatický budú oznamovať hodiny\nDEFAULT_CHANNELS=\n" +
+		"#Povolenie koncových správ\nEND_MESSAGE_ENABLE=true\n\n" +
+		"#Vlastná koncová správa, ak nechané prázdné, použije sa prednastavená správa\nEND_MESSAGE=\n\n" +
+		"#Povolenie pingovania role v automatických správach\nPING_ROLE_ENABLE=\n\n" +
+		"#ID role ktorá sa ma pingnuť\nPING_ROLE_ID="))
+	if err != nil {
+		log.Println("[RozvrhBOT] Issue writing to config.txt")
+		time.Sleep(time.Second*5)
+		os.Exit(3)
+	}
+
+	time.Sleep(time.Second*5)
+	os.Exit(3)
+}
+>>>>>>> e28bd25 (Pridané komentáre k nastaveniam)
