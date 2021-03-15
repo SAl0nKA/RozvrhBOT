@@ -314,7 +314,6 @@ func CreateConfigFile(){
 		os.Exit(3)
 	}
 
-	//TODO pridať komentare k jednotlivym premennym
 	_, err = f.WriteString(fmt.Sprintf("#Token ktorým sa bot prihlasuje\nDISCORD_BOT_TOKEN=\n\n" +
 		"#Prefix pred príkazy pre bota\nBOT_PREFIX=\n\n" +
 		"#Miesto na hodiny v jednotlivé dni, zadavajte vo formáte FYZ,FYZ,FYZ\nPONDELOK=\n" +
