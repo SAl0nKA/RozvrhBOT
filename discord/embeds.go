@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 )
-
+//TODO pridať nazov bota do helpu
 func GetHelp(s *discordgo.Session,m *discordgo.MessageCreate){
 	var EmbedHelp = discordgo.MessageEmbed{
 		Title: fmt.Sprintf("Help - Verzia %s",config.Version),

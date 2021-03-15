@@ -38,6 +38,9 @@ func GetCommandType(arg string) CommandType {
 	return Null
 }
 
+//TODO pridať príkaz na pridanie suplovania
+//TODO pridať príkaz na link na github
+//TODO pridať footery správam
 func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.HasPrefix(m.Content, config.BotPrefix) {
 		args := strings.Fields(m.Content)
