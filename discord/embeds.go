@@ -47,5 +47,3 @@ func NemasOpravnenie(s *discordgo.Session, m *discordgo.MessageCreate){
 	}
 	s.ChannelMessageSendEmbed(m.ChannelID,&embed)
 }
-
-
