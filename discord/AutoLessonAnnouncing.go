@@ -80,7 +80,7 @@ func HodAnnounceHelp(s *discordgo.Session, BaseHod int) {
 				Description: fmt.Sprintf("%s%s",link,ping),
 				Footer: &discordgo.MessageEmbedFooter{
 					Text:         "*Beep, Boop. Táto správa je automatizovaná*",
-					IconURL:      s.State.User.Avatar,
+					IconURL:      s.State.User.AvatarURL("128"),
 				},
 				Color: 177013,//green
 			}
