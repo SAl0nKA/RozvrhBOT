@@ -20,17 +20,21 @@ Discord bot ktorý posiela linky na online hodiny. Tento bot vznikol vo voľnom 
 *Príklad:* `PONDELOK=FYZ,-,FYZ` atď.
 - `DISCORD_BOT_TOKEN`: Botov token ktorým sa bude prihlasovať
 - `BOT_PREFIX`: Prefix pred príkazy bota, ak nebude žiadny, bot bude reagovať na všetky správy začínajúce na príkazy
-- `PONDELOK` - `PIATOK`: Hodiny, ktoré máte v ten deň. Zadávajte skratky, ktoré máte v rozvrhu **Môžete nastaviť maximalne 8 hodín na jeden deň**
+- `PONDELOK` - `PIATOK`: Hodiny, ktoré máte v ten deň. Zadávajte skratky, ktoré máte v rozvrhu **Môžete nastaviť maximálne 8 hodín na jeden deň**
 - `ROLES_IDS`: ID rolí, ktoré budú môcť používať príkazy, nechajte prázdne aby ich mohli používať všetci
 - `CASY`: Časy odkedy dokedy sú hodiny, zadávajte ich vo formáte `8:00-8:45`, zadávajte všetky hodiny od prvej po poslednú
-- `DEFAULT_CHANNELS`: ID kanálu do ktorého sa automaticky budú posielať najbližšie hodiny, ak to necháte prázdne, automatické oznamovanie nebude fungovať, môžete použiť viacero ID
-- `END_MESSAGE`: Správa, ktorá sa odošle na konci vyučovania
+- `DEFAULT_CHANNELS`: ID kanálu do ktorého sa automaticky budú posielať nadchadzajúce hodiny, ak to necháte prázdne, automatické oznamovanie nebude fungovať, môžete použiť viacero ID
+- `END_MESSAGE_ENABLE`: Povolenie odosielania koncových správ, prednastavene zapnuté
+- `END_MESSAGE`: Správa, ktorá sa odošle na konci vyučovania, ak nechané prázdne, použije sa prednastavená hodnota
+- `PING_ROLE_ENABLE`: Povolenie pingovania role, momentálne iba jednej
+- `PING_ROLE_ID`: ID role ktorá sa má pingnuť
+
 ### linky.txt
 Po vyplnení `config.txt` sa vám vytvorí ďalší súbor s jednotlivými hodinami ktoré máte. Linky na hodiny zadávajte vo formáte `FYZ=link`
 
 ## Príkazy
-- `help` vypíše použitelné príkazy
+- `help` vypíše použiteľné príkazy
 - `ping` a `pong` - slúžia čisto na testovanie správnej funkcie bota, `pong` je prístupný podľa nastavenia `ROLES_IDS` v `config.txt`
 - `hod` - Vypíše najbližšiu hodinu
-- `dalsia` - Vypíše následujúcu hodinu za najbližšou hodinou
-- `rozvrh` - Vypíše celý rozvrh na konkrétny deň, v rozvrhu sa da posúvať medzi jednotlivými dňami pomocou šípiek
+- `dalsia` - Vypíše nasledujúcu hodinu za najbližšou hodinou
+- `rozvrh` - Vypíše celý rozvrh na konkrétny deň, v rozvrhu sa da posúvať medzi jednotlivými dňami pomocou šipiek
