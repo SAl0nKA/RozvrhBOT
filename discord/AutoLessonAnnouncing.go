@@ -39,7 +39,7 @@ func HodAnnounce(s *discordgo.Session) {
 			HodAnnounceHelp(s, 7)
 		}
 
-		KoniecDna := config.KoniecHodin[w]
+		KoniecDna := config.SchoolDays[int(w)-1].KoniecVyuc
 		if KoniecDna.Hodina == h && KoniecDna.Hodina == m && config.EndMessageEnable{
 			log.Println("[RozvrhBOT] Sending end message")
 			for _,channelID := range config.DefaultChannelsID{
@@ -48,7 +48,7 @@ func HodAnnounce(s *discordgo.Session) {
 					Description: "",
 					Footer: &discordgo.MessageEmbedFooter{
 						Text:         "*Beep, Boop. Táto správa je automatizovaná*",
-						IconURL:      s.State.User.Avatar,
+						IconURL:      s.State.User.AvatarURL("128"),
 					},
 					Color:     16711680, //RED
 				}
