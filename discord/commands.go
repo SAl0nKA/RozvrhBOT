@@ -61,3 +61,13 @@ func CommandRozvrh(s *discordgo.Session, m *discordgo.MessageCreate){
 		NemasOpravnenie(s,m)
 	}
 }
+
+func CommandGithub(s *discordgo.Session, m *discordgo.MessageCreate){
+	embed := discordgo.MessageEmbed{
+		URL:         "https://github.com/SAl0nKA/RozvrhBOT",
+		Title:       "RozvrhBOT GitHub",
+		Description: "",
+		Color:       17407, //BLUE
+	}
+	s.ChannelMessageSendEmbed(m.ChannelID,&embed)
+}

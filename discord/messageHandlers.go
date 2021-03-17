@@ -16,6 +16,7 @@ const (
 	Hod
 	Dalsia
 	Rozvrh
+	Github
 	Null
 )
 
@@ -26,6 +27,7 @@ var CommandTypeStringMapping = map[string]CommandType{
 	"hod":    	Hod,
 	"dalsia":	Dalsia,
 	"rozvrh": 	Rozvrh,
+	"github":	Github,
 	"":      	Null,
 }
 
@@ -67,6 +69,9 @@ func HandleCommand(s *discordgo.Session, m *discordgo.MessageCreate) {
 		case Rozvrh:
 			log.Printf("[RozvrhBOT] Reacting to command \"%srozvrh\"", config.BotPrefix)
 			CommandRozvrh(s, m)
+		case Github:
+			log.Printf("[RozvrhBOT] Reacting to command \"%sgithub\"",config.BotPrefix)
+			CommandGithub(s,m)
 		}
 	}
 }
