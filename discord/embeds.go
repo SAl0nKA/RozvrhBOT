@@ -24,6 +24,10 @@ func GetHelp(s *discordgo.Session,m *discordgo.MessageCreate){
 				Value:  "Odpíše \"Ping!\"",
 			},
 			{
+				Name: config.BotPrefix + "github",
+				Value:  "Link na GitHub",
+			},
+			{
 				Name: config.BotPrefix + "hod",
 				Value:  "Vypíše najbližšiu hodinu",
 			},
