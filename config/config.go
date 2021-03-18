@@ -64,20 +64,9 @@ func ReadConfig() error {
 	}
 
 	BotPrefix = os.Getenv("BOT_PREFIX")
-<<<<<<< HEAD
-<<<<<<< HEAD
-	config.BotPrefix = BotPrefix
-	/*if config.BotPrefix == "" {
-		return errors.New("no BOT_PREFIX provided")
-	}*/
-=======
-	//config.BotPrefix = BotPrefix
->>>>>>> 8754588 (Save)
-=======
 	if BotPrefix == "" {
 		log.Println("[RozvrhBOT][WARNING] BOT_PREFIX not configured")
 	}
->>>>>>> a833281 (Upratanie kodu)
 
 	RoleIDSstring = os.Getenv("ROLES_IDS")
 
@@ -211,16 +200,8 @@ func ReadConfig() error {
 		}
 		SchoolDays = append(SchoolDays,NewSchoolDay(hodiny,linky,casy,koniecdna))
 	}
-<<<<<<< HEAD
-	/*for _,sd := range SchoolDays{
-		fmt.Println(sd.Hodiny)
-		fmt.Println(sd.Casy)
-		fmt.Println(sd.Linky)
-	}*/
-=======
 
 	log.Println("[RozvrhBOT] Innitialization succsessful")
->>>>>>> a833281 (Upratanie kodu)
 	return nil
 }
 
@@ -285,24 +266,6 @@ func AppendIfMissing(slice []string, i string) []string {
 		}
 	}
 	return append(slice, i)
-<<<<<<< HEAD
-<<<<<<< HEAD
-}
-
-func NewSchoolDay(hodiny, linky, casy []string, day time.Weekday)*SchoolDay{
-	s := SchoolDay{
-		Hodiny: hodiny,
-		Linky:  linky,
-		Casy:   casy,
-		day: 	day,
-	}
-	return &s
-}
-
-=======
-}
->>>>>>> a833281 (Upratanie kodu)
-=======
 }
 
 func CreateConfigFile(){
@@ -339,4 +302,3 @@ func CreateConfigFile(){
 	time.Sleep(time.Second*5)
 	os.Exit(3)
 }
->>>>>>> e28bd25 (Pridané komentáre k nastaveniam)
